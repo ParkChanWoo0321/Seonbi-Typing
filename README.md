@@ -1,10 +1,10 @@
-# 선비마인드
+# 선비타이핑
 
 사진 넣을 곳
 
 ## 1. 프로젝트 소개
 
-**선비마인드**는 고전 문장, 사자성어, 고사성어, 전통적인 우리말 표현을 퀴즈 형태로 학습할 수 있는 **AI 기반 고전 언어 학습 서비스**입니다.
+**선비타이핑**는 고전 문장, 사자성어, 고사성어, 전통적인 우리말 표현을 퀴즈 형태로 학습할 수 있는 **AI 기반 고전 언어 학습 서비스**입니다.
 
 사용자는 짧은 문제를 반복적으로 풀면서 고전 표현의 의미와 독음을 익히고, 답안을 제출하면 AI 훈장님 피드백을 통해 정답 여부와 해설을 확인할 수 있습니다.
 
@@ -20,7 +20,7 @@
 
 현재 영어 학습 서비스나 게임형 언어 학습 플랫폼은 다양하게 존재하지만, 우리 고유의 고전 표현을 쉽고 재미있게 학습할 수 있는 서비스는 상대적으로 부족합니다.
 
-선비마인드는 이러한 문제를 해결하기 위해 고전 문장을 데이터베이스화하고, 퀴즈 학습 구조와 AI 피드백 시스템을 결합하여 사용자가 부담 없이 고전 표현을 학습할 수 있도록 설계하였습니다.
+선비타이핑는 이러한 문제를 해결하기 위해 고전 문장을 데이터베이스화하고, 퀴즈 학습 구조와 AI 피드백 시스템을 결합하여 사용자가 부담 없이 고전 표현을 학습할 수 있도록 설계하였습니다.
 
 ---
 
@@ -414,66 +414,124 @@ seonbi-mind
 ├── src
 │   ├── main
 │   │   ├── java
-│   │   │   └── com
+│   │   │   └── youngju
 │   │   │       └── seonbimind
 │   │   │           ├── SeonbiMindApplication.java
 │   │   │           │
 │   │   │           ├── auth
+│   │   │           │   ├── config
+│   │   │           │   │   └── SecurityConfig.java
+│   │   │           │   │
 │   │   │           │   ├── controller
-│   │   │           │   ├── service
+│   │   │           │   │   └── AuthController.java
+│   │   │           │   │
 │   │   │           │   ├── dto
+│   │   │           │   │   ├── AuthResponse.java
+│   │   │           │   │   ├── AuthResult.java
+│   │   │           │   │   ├── LoginRequest.java
+│   │   │           │   │   ├── SignupRequest.java
+│   │   │           │   │   └── TodaySentenceResponse.java
+│   │   │           │   │
 │   │   │           │   ├── entity
-│   │   │           │   └── repository
-│   │   │           │
-│   │   │           ├── problem
-│   │   │           │   ├── controller
-│   │   │           │   ├── service
-│   │   │           │   ├── dto
-│   │   │           │   ├── entity
-│   │   │           │   └── repository
+│   │   │           │   │   └── AuthMember.java
+│   │   │           │   │
+│   │   │           │   ├── jwt
+│   │   │           │   │   ├── JwtAuthenticationFilter.java
+│   │   │           │   │   └── JwtTokenProvider.java
+│   │   │           │   │
+│   │   │           │   ├── repository
+│   │   │           │   │   └── AuthMemberRepository.java
+│   │   │           │   │
+│   │   │           │   └── service
+│   │   │           │       ├── AuthService.java
+│   │   │           │       └── CurrentMemberService.java
 │   │   │           │
 │   │   │           ├── classic
-│   │   │           │   ├── controller
-│   │   │           │   ├── service
-│   │   │           │   ├── dto
-│   │   │           │   ├── entity
-│   │   │           │   └── repository
-│   │   │           │
-│   │   │           ├── history
-│   │   │           │   ├── controller
-│   │   │           │   ├── service
-│   │   │           │   ├── dto
-│   │   │           │   ├── entity
-│   │   │           │   └── repository
-│   │   │           │
-│   │   │           ├── level
-│   │   │           │   ├── service
-│   │   │           │   ├── entity
-│   │   │           │   └── repository
-│   │   │           │
-│   │   │           ├── ai
-│   │   │           │   ├── service
-│   │   │           │   └── dto
-│   │   │           │
-│   │   │           ├── global
-│   │   │           │   ├── config
-│   │   │           │   ├── exception
-│   │   │           │   ├── security
-│   │   │           │   └── response
+│   │   │           │   ├── gpt
+│   │   │           │   │   ├── dto
+│   │   │           │   │   │   └── MeaningEvaluationResult.java
+│   │   │           │   │   │
+│   │   │           │   │   └── service
+│   │   │           │   │       └── GptMeaningEvaluationService.java
+│   │   │           │   │
+│   │   │           │   ├── problem
+│   │   │           │   │   ├── controller
+│   │   │           │   │   │   └── ProblemController.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── dto
+│   │   │           │   │   │   ├── AnswerRequest.java
+│   │   │           │   │   │   ├── ProblemAnswerResponse.java
+│   │   │           │   │   │   ├── ProblemStartRequest.java
+│   │   │           │   │   │   └── ProblemStartResponse.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── entity
+│   │   │           │   │   │   ├── ProblemSession.java
+│   │   │           │   │   │   ├── ProblemSessionStage.java
+│   │   │           │   │   │   └── UserSentenceUsage.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── repository
+│   │   │           │   │   │   ├── ProblemSessionRepository.java
+│   │   │           │   │   │   └── UserSentenceUsageRepository.java
+│   │   │           │   │   │
+│   │   │           │   │   └── service
+│   │   │           │   │       └── ProblemService.java
+│   │   │           │   │
+│   │   │           │   ├── progress
+│   │   │           │   │   ├── controller
+│   │   │           │   │   │   └── MeProgressController.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── dto
+│   │   │           │   │   │   ├── ProblemHistoryResponse.java
+│   │   │           │   │   │   └── ProgressResponse.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── entity
+│   │   │           │   │   │   ├── LearningRank.java
+│   │   │           │   │   │   ├── SolvedProblemHistory.java
+│   │   │           │   │   │   └── UserProgress.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── repository
+│   │   │           │   │   │   ├── SolvedProblemHistoryRepository.java
+│   │   │           │   │   │   └── UserProgressRepository.java
+│   │   │           │   │   │
+│   │   │           │   │   └── service
+│   │   │           │   │       └── ProgressService.java
+│   │   │           │   │
+│   │   │           │   └── sentence
+│   │   │           │       ├── entity
+│   │   │           │       │   └── ClassicSentence.java
+│   │   │           │       │
+│   │   │           │       └── repository
+│   │   │           │           └── ClassicSentenceRepository.java
 │   │   │           │
 │   │   │           └── common
+│   │   │               └── exception
+│   │   │                   └── ApiExceptionHandler.java
 │   │   │
 │   │   └── resources
-│   │       ├── application.yml
-│   │       └── application-prod.yml
+│   │       ├── static
+│   │       ├── templates
+│   │       └── application.properties
 │   │
 │   └── test
 │
 ├── build.gradle
 ├── settings.gradle
-├── deploy.sh
 └── README.md
 ```
+
+### 패키지별 역할
+
+| 패키지 | 역할 |
+|---|---|
+| `auth` | 회원가입, 로그인, 사용자 인증 관련 기능 관리 |
+| `auth.config` | Spring Security 설정 및 인증/인가 정책 관리 |
+| `auth.jwt` | JWT 토큰 생성, 검증, 인증 필터 처리 |
+| `classic.gpt` | GPT 기반 사용자 답안 의미 평가 및 AI 피드백 생성 |
+| `classic.problem` | 문제 세션 생성, 단계별 문제 제공, 답안 제출 및 채점 처리 |
+| `classic.progress` | 사용자 학습 기록, 풀이 이력, 경험치, 문패 등급 관리 |
+| `classic.sentence` | 고전 문장 데이터 엔티티 및 Repository 관리 |
+| `common.exception` | 전역 예외 처리 및 API 에러 응답 관리 |
+| `resources` | 정적 리소스, 템플릿, 애플리케이션 설정 파일 관리 |
 
 ---
 
