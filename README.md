@@ -1,855 +1,784 @@
-# 선비타이핑
+# 선비타이핑 🎓
 
 사진 넣을 곳
 
-## 1. 프로젝트 소개
+## 1. 프로젝트 소개 🚀
 
-**선비타이핑**는 고전 문장, 사자성어, 고사성어, 전통적인 우리말 표현을 퀴즈 형태로 학습할 수 있는 **AI 기반 고전 언어 학습 서비스**입니다.
+선비타이핑은 고전 문장을 학습하고 단계별 문제 풀이를 통해 문장의 의미를 익히는 백엔드 서비스입니다. 사용자는 회원가입과 로그인을 통해 JWT 기반 인증을 거친 뒤, 고전 문장을 단어 순서 맞추기, 보고 타이핑, 안 보고 타이핑의 3단계로 학습합니다.
 
-사용자는 짧은 문제를 반복적으로 풀면서 고전 표현의 의미와 독음을 익히고, 답안을 제출하면 AI 훈장님 피드백을 통해 정답 여부와 해설을 확인할 수 있습니다.
+백엔드는 사용자 인증, 문제 출제, 진행 중인 문제 상태 저장, GPT API 기반 의미 채점, 풀이 기록 저장, 연속 풀이 일수와 등급 계산을 담당합니다. 단순히 문제를 제공하는 API가 아니라, 사용자의 학습 흐름이 중간에 끊기지 않도록 문제 세션과 풀이 이력을 분리하여 관리하는 구조로 구현했습니다.
 
-단순한 문제 풀이 서비스가 아니라, 고전 언어 자산을 현대적인 디지털 학습 콘텐츠로 재구성하고, 사용자의 학습 기록과 성장 단계를 관리하는 백엔드 중심의 학습 플랫폼입니다.
-
----
-
-## 2. 프로젝트 기획 배경
+## 2. 프로젝트 기획 배경 📌
 
 사진 넣을 곳
 
-디지털 환경이 확산되면서 짧고 자극적인 콘텐츠 소비가 증가하고, 줄임말과 신조어 중심의 언어 사용이 일상화되고 있습니다. 이러한 변화 속에서 고전 문장, 사자성어, 전통적인 우리말 표현과 같은 언어 자산은 일상에서 접하기 어려워지고 있습니다.
+고전 문장은 한자 원문, 독음, 해석을 함께 이해해야 학습 효과가 높습니다. 하지만 단순 암기 방식만으로는 문장 구조와 의미를 오래 기억하기 어렵고, 사용자가 직접 문장을 재구성하고 다시 입력하는 반복 학습 과정이 필요합니다.
 
-현재 영어 학습 서비스나 게임형 언어 학습 플랫폼은 다양하게 존재하지만, 우리 고유의 고전 표현을 쉽고 재미있게 학습할 수 있는 서비스는 상대적으로 부족합니다.
+선비타이핑은 고전 문장의 해석을 단어 단위로 재배열하고, 사용자가 직접 타이핑하며 의미를 확인하는 흐름을 제공합니다. 특히 마지막 단계에서는 정답 문장과 사용자의 답변을 단순 문자열로만 비교하지 않고 GPT API를 활용해 의미 일치 여부를 판단하도록 설계했습니다. 이를 통해 표현이 조금 달라도 의미가 유지되면 정답으로 인정할 수 있는 유연한 학습 경험을 제공합니다.
 
-선비타이핑는 이러한 문제를 해결하기 위해 고전 문장을 데이터베이스화하고, 퀴즈 학습 구조와 AI 피드백 시스템을 결합하여 사용자가 부담 없이 고전 표현을 학습할 수 있도록 설계하였습니다.
-
----
-
-## 3. 주요 기능
+## 3. 주요 기능 ✨
 
 사진 넣을 곳
 
-### 3.1 고전 문장 기반 퀴즈 학습
+### 사용자 기능
 
-사용자는 고전 문장, 사자성어, 고사성어를 기반으로 구성된 문제를 풀 수 있습니다.  
-문제는 원문, 독음, 뜻, 해설 데이터를 기반으로 제공되며, 사용자의 답변에 따라 정답 여부가 판별됩니다.
-
-### 3.2 AI 훈장님 피드백
-
-사용자가 답안을 제출하면 AI가 사용자의 답변을 분석하고, 훈장님 말투의 피드백을 제공합니다.  
-단순히 정답과 오답만 반환하는 것이 아니라, 왜 맞았는지 또는 왜 틀렸는지를 설명하여 학습 효과를 높였습니다.
-
-### 3.3 학습 기록 저장
-
-사용자가 푼 문제는 학습 기록으로 저장됩니다.  
-사용자는 자신이 어떤 문제를 풀었는지, 제출한 답변이 무엇이었는지, 정답 여부와 해설을 다시 확인할 수 있습니다.
-
-### 3.4 레벨 기반 성장 시스템
-
-사용자의 학습 참여를 유도하기 위해 전통 관직 명칭을 활용한 레벨 시스템을 적용하였습니다.
-
-| 레벨 | 명칭 |
+| 기능 | 설명 |
 |---|---|
-| 1 | 도사 |
-| 2 | 정랑 |
-| 3 | 첨정 |
-| 4 | 사인 |
-| 5 | 집의 |
-| 6 | 참의 |
-| 7 | 동지사 |
-| 8 | 지사 |
-| 9 | 판사 |
-| 10 | 영의정 |
+| 회원가입 | 이름, 로그인 ID, 비밀번호를 입력받아 사용자를 생성합니다. |
+| 로그인 | 로그인 ID와 비밀번호를 검증하고 Access Token과 Refresh Token을 발급합니다. |
+| 로그아웃 | Refresh Token 쿠키를 만료시켜 로그아웃 처리를 수행합니다. |
+| 내 정보 조회 | 사용자 이름, 로그인 ID, Access Token, 풀이 수, 연속 풀이 일수, 등급, 오늘의 문장을 조회합니다. |
 
-퀴즈를 풀고 학습 경험을 쌓으면 단계적으로 승급할 수 있으며, 최종 단계인 영의정에 도달하면 프로필 이미지 변경과 같은 보상 요소를 제공할 수 있도록 설계하였습니다.
+### 문제 풀이 기능
 
-### 3.5 고전 문장 데이터 관리
+| 기능 | 설명 |
+|---|---|
+| 문제 시작 | 요청한 `historyId`를 기준으로 새 문제 출제, 진행 중 문제 재개, 완료 문제 복습을 분기합니다. |
+| 오늘의 문장 | 사용자가 당일 처음 시작한 문제를 오늘의 문장으로 표시합니다. |
+| 단어 순서 맞추기 | 해석 문장을 공백 기준으로 나누고 섞은 뒤, 사용자가 올바른 문장 순서로 조합합니다. |
+| 보고 타이핑 | 해석 문장을 보고 그대로 입력하며 문자열 비교로 채점합니다. |
+| 안 보고 타이핑 | 사용자가 기억한 해석을 입력하고 GPT API로 의미 일치 여부를 채점합니다. |
+| 문제 완료 처리 | 3단계까지 성공하면 문장 사용 처리, 사용자 진행도 갱신, 풀이 기록 저장을 수행합니다. |
 
-고전 문장 데이터는 `classic_sentences` 테이블에 저장됩니다.  
-원문, 독음, 현대어 뜻, 사용 여부, 생성일, 수정일을 관리하여 문제 출제 데이터로 활용합니다.
+### 학습 기록 기능
 
----
+| 기능 | 설명 |
+|---|---|
+| 전체 풀이 수 | 사용자가 최종 완료한 문제 수를 누적 저장합니다. |
+| 연속 풀이 일수 | 한국 시간 기준으로 매일 1문제 이상 풀었는지 계산합니다. |
+| 등급 계산 | 총 풀이 수에 따라 도사부터 영의정까지 등급을 계산합니다. |
+| 풀이 기록 조회 | 사용자가 완료한 문제의 원문, 독음, 해석, 답안, 해설, 풀이 시각을 조회합니다. |
 
-## 4. 기술 스택
+관리자 API는 현재 코드에 존재하지 않습니다.
+
+## 4. 기술 스택 🛠️
 
 | 구분 | 기술 |
 |---|---|
-| Language | Java |
-| Framework | Spring Boot |
-| Web | Spring Web |
+| Language | Java 17 |
+| Framework | Spring Boot 4.0.5 |
+| Web | Spring Web MVC |
+| Security | Spring Security |
+| Authentication | JWT |
 | ORM | Spring Data JPA |
 | Database | MySQL |
-| Security | Spring Security, JWT |
-| AI | OpenAI API |
 | Build Tool | Gradle |
-| API Test | Postman |
-| Deploy | GCP VM |
-| Version Control | Git, GitHub |
+| Library | Lombok |
+| External API | OpenAI Responses API |
+| Test | JUnit Platform, Spring Boot Test Dependencies |
 
----
-
-## 5. 시스템 구조
+## 5. 시스템 구조 🧩
 
 사진 넣을 곳
+
+선비타이핑은 Controller, Service, Repository, Entity를 기준으로 계층을 분리한 구조입니다. Controller는 HTTP 요청과 응답을 담당하고, Service는 인증된 사용자 기준의 비즈니스 로직을 처리하며, Repository는 Spring Data JPA를 통해 데이터베이스에 접근합니다.
 
 ```text
-[Client]
-   |
-   | HTTP Request
-   v
-[Spring Boot Backend]
-   |
-   |-- Auth Module
-   |     |-- 회원가입
-   |     |-- 로그인
-   |     |-- JWT 인증
-   |
-   |-- Problem Module
-   |     |-- 고전 문장 문제 조회
-   |     |-- 답안 제출
-   |     |-- 정답 판별
-   |
-   |-- AI Feedback Module
-   |     |-- 사용자 답안 분석
-   |     |-- AI 훈장님 피드백 생성
-   |
-   |-- History Module
-   |     |-- 사용자가 푼 문제 기록 저장
-   |     |-- 내 학습 기록 조회
-   |
-   |-- Level Module
-   |     |-- 경험치 관리
-   |     |-- 문패 등급 관리
-   |
-   v
-[MySQL Database]
-   |
-   |-- users
-   |-- classic_sentences
-   |-- problem_histories
-   |-- user_levels
+Client
+  ↓
+Controller
+  ↓
+Service
+  ↓
+Repository
+  ↓
+Database
 ```
-## 6. 백엔드 핵심 구현 내용
 
-### 6.1 고전 문장 데이터 기반 문제 출제 구조
+인증 흐름은 JWT 기반으로 구성되어 있습니다. 로그인 또는 회원가입 성공 시 Access Token은 응답 body로 내려주고, Refresh Token은 `HttpOnly` 쿠키로 내려줍니다. 이후 인증이 필요한 API는 `Authorization: Bearer {accessToken}` 헤더를 통해 호출합니다.
 
-고전 문장은 `classic_sentences` 테이블에 저장하고, 문제 출제 시 사용되지 않은 데이터를 우선적으로 조회하도록 설계하였습니다.
+```text
+Client Request
+  ↓
+JwtAuthenticationFilter
+  ↓
+JwtTokenProvider
+  ↓
+SecurityContext 인증 정보 저장
+  ↓
+Controller 진입
+```
 
-각 문장은 다음 정보를 포함합니다.
+`SecurityConfig`에서는 CSRF, Form Login, HTTP Basic, 기본 Logout을 비활성화하고, 세션 정책을 `STATELESS`로 설정했습니다. `/api/auth/signup`, `/api/auth/login`, `/api/auth/logout`, `/error`, `OPTIONS /**` 요청은 허용하고, 그 외 API는 인증을 요구합니다.
 
-- 원문
-- 독음
-- 현대어 뜻
-- 사용 여부
-- 생성일
-- 수정일
+## 6. 백엔드 핵심 구현 내용 🔥
 
-이를 통해 고전 문장 데이터를 문제 출제 단위로 관리할 수 있으며, 사용자가 이미 풀었던 문제와 중복되지 않도록 확장 가능한 구조를 구성하였습니다.
+### JWT 기반 인증/인가 구조
 
----
+JWT 인증은 `JwtTokenProvider`와 `JwtAuthenticationFilter`로 분리했습니다. `JwtTokenProvider`는 HMAC SHA-256 방식으로 Access Token과 Refresh Token을 생성하고, 토큰 payload에는 사용자 ID, 로그인 ID, 이름, 토큰 타입, 발급 시각, 만료 시각을 포함합니다.
 
-### 6.2 사용자 답안 채점 및 학습 기록 저장
+`JwtAuthenticationFilter`는 모든 요청에서 `Authorization` 헤더를 확인하고, 유효한 Access Token이면 로그인 ID로 회원을 조회한 뒤 `SecurityContextHolder`에 인증 객체를 저장합니다. 이 구조를 통해 Controller나 Service에서 request body로 사용자 ID를 받지 않고도 현재 로그인한 사용자를 안전하게 식별할 수 있습니다.
 
-사용자가 답안을 제출하면 서버는 문제의 정답 데이터와 사용자 답변을 비교하여 정답 여부를 판단합니다.
+### 회원가입/로그인 구조
 
-채점 결과는 단순 응답으로 끝나지 않고 `problem_histories` 테이블에 저장됩니다.
+회원가입은 이름, 로그인 ID, 비밀번호를 입력받아 처리합니다. 비밀번호는 `BCryptPasswordEncoder`로 암호화하여 저장하고, 로그인 ID는 DB unique 제약 조건과 서비스 레벨 중복 검사로 보호합니다.
 
-이를 통해 사용자는 자신이 푼 문제 목록을 다시 확인할 수 있고, 서비스는 사용자의 학습 이력을 기반으로 복습 기능이나 개인화 추천 기능으로 확장할 수 있습니다.
+로그인은 로그인 ID로 사용자를 조회한 뒤 BCrypt로 비밀번호를 검증합니다. 인증에 성공하면 Access Token과 Refresh Token을 발급하고, Refresh Token은 `HttpOnly` 쿠키에 담아 내려줍니다. 이 방식은 프론트엔드가 Access Token을 활용해 API를 호출하면서도 Refresh Token을 JavaScript에서 직접 다루지 않도록 구성한 것입니다.
 
----
+### 주요 도메인 설계
 
-### 6.3 AI 훈장님 피드백 연동
+문제 풀이 도메인은 `ClassicSentence`, `ProblemSession`, `SolvedProblemHistory`, `UserProgress`, `UserSentenceUsage`로 나누어 설계했습니다.
 
-정답 여부가 결정되면 AI API를 통해 사용자 답변에 대한 해설을 생성합니다.
+`ClassicSentence`는 고전 문장 원본 데이터입니다. `ProblemSession`은 사용자가 현재 풀고 있는 문제 상태를 저장합니다. 사용자가 문제를 시작하면 세션이 생성되고, 단어 순서 맞추기, 보고 타이핑, 안 보고 타이핑 단계를 거치며 `stage` 값이 변경됩니다.
 
-AI 피드백은 일반적인 설명이 아니라 서비스 콘셉트에 맞게 훈장님 캐릭터의 말투로 제공되도록 구성하였습니다.
+최종 완료된 문제는 `SolvedProblemHistory`에 별도로 저장합니다. 진행 중인 세션과 완료 기록을 분리했기 때문에, 중간에 실패하거나 이탈한 문제는 완료 기록으로 처리되지 않습니다. 또한 `UserProgress`는 총 풀이 수와 연속 풀이 일수를 관리하고, `UserSentenceUsage`는 사용자별로 이미 사용한 문장을 기록하여 여러 사용자가 독립적으로 문제를 풀 수 있도록 했습니다.
 
-사용자가 정답을 맞힌 경우에는 긍정적인 피드백과 함께 표현의 의미를 다시 설명하고, 오답인 경우에는 사용자가 혼동한 지점을 중심으로 해설을 제공합니다.
+### 문제 시작과 복습 흐름 설계
 
----
+문제 시작 API는 `historyId`를 요청 body로 받습니다. 이 값은 DB PK가 아니라 사용자 기준 몇 번째 문제인지를 의미합니다.
 
-### 6.4 JWT 기반 인증 구조
+이미 완료한 `historyId`를 요청하면 새 문제를 출제하지 않고 기존 풀이 기록을 반환합니다. 다음으로 풀어야 할 `historyId`를 요청하면 진행 중 문제가 있는지 먼저 확인하고, 없을 때만 새 문제를 뽑습니다. 아직 접근할 수 없는 미래 번호를 요청하면 400 에러를 반환합니다.
 
-로그인 이후 발급된 Access Token을 사용하여 인증이 필요한 API를 호출할 수 있도록 구성하였습니다.
+이 설계는 같은 사용자가 같은 문제 번호를 여러 번 요청해도 중복 데이터가 생기지 않도록 하고, 프론트엔드에서 “1번 문제, 2번 문제, 3번 문제”처럼 사용자 기준 학습 순서를 안정적으로 다룰 수 있게 합니다.
 
-특히 사용자의 학습 기록 조회, 문제 풀이 기록 저장, 레벨 정보 관리와 같은 기능은 사용자 식별이 필요하므로 JWT 인증을 기반으로 처리하였습니다.
+### 3단계 문제 풀이 구조
 
----
+문제 풀이는 `ORDER`, `COPY_TYPING`, `BLIND_TYPING`, `COMPLETED` 단계로 관리됩니다. 각 단계는 이전 단계를 성공해야 다음 단계로 이동할 수 있습니다.
 
-### 6.5 학습 기록 기반 확장 가능한 레벨 시스템
+1단계에서는 해석 문장을 단어 단위로 섞어 제공하고, 사용자가 조합한 문장을 정답 해석과 비교합니다. 2단계에서는 해석 문장을 보고 그대로 타이핑하며 문자열 비교를 수행합니다. 3단계에서는 사용자가 문장을 보지 않고 입력한 답안을 GPT API로 평가합니다.
 
-사용자의 문제 풀이 기록과 정답 여부를 기반으로 경험치를 누적하고, 특정 기준에 도달하면 레벨이 상승하는 구조를 설계하였습니다.
+문제를 완료한 것으로 인정되는 시점은 GPT 의미 채점까지 성공한 경우입니다. 이때만 문장 사용 처리, 사용자별 문장 사용 기록 저장, 총 풀이 수 증가, 연속 풀이 일수 갱신, 풀이 기록 저장이 수행됩니다.
 
-레벨 명칭은 서비스의 고전 학습 콘셉트에 맞게 전통 관직 명칭을 활용하였으며, 단순 점수 시스템보다 사용자에게 더 직관적인 성장 경험을 제공할 수 있도록 구성하였습니다.
+### GPT API 기반 의미 채점
 
----
+`GptMeaningEvaluationService`는 OpenAI Responses API 호출을 담당합니다. API Key, 모델명, 호출 URL은 `application.properties`와 환경 변수를 통해 주입받으며, 코드에 직접 하드코딩하지 않았습니다.
 
-## 7. API 명세
+GPT 응답은 JSON Schema 형식으로 제한하여 `correct`와 `reason` 값을 받도록 구성했습니다. `reason`은 한국어 훈장님 말투로 간결하고 따뜻하게 작성하도록 프롬프트를 구성했습니다. 문자열이 완전히 같지 않아도 의미가 유지되면 정답으로 처리할 수 있어, 고전 문장 학습에 더 적합한 채점 방식을 제공합니다.
+
+### 사용자 진행도와 등급 계산
+
+`UserProgress`는 사용자의 총 풀이 수, 현재 연속 풀이 일수, 마지막 풀이 날짜를 저장합니다. 날짜 계산은 `Asia/Seoul` 기준으로 수행합니다.
+
+총 풀이 수는 절대 초기화되지 않고, 최종 완료된 문제 수만 누적됩니다. 등급은 `LearningRank` enum에서 총 풀이 수 기준으로 계산하며, 도사부터 영의정까지 단계적으로 상승합니다. `api/auth/me` 응답에는 현재 등급, 다음 등급, 다음 등급까지 남은 문제 수가 포함됩니다.
+
+### 예외 처리 구조
+
+비즈니스 예외는 `ResponseStatusException`을 사용하고, `ApiExceptionHandler`에서 공통 JSON 응답으로 변환합니다. 응답에는 timestamp, status, error, message, path가 포함됩니다.
+
+이를 통해 API 실패 시 프론트엔드가 일관된 구조로 에러 메시지를 처리할 수 있습니다. 인증 실패는 Spring Security의 `authenticationEntryPoint`에서 별도의 JSON 메시지로 처리합니다.
+
+### CORS/Security 설정
+
+CORS 허용 Origin은 `app.cors.allowed-origins` 설정값으로 관리합니다. 기본값은 `http://localhost:5173`이며, 쉼표로 여러 Origin을 설정할 수 있습니다.
+
+프론트엔드 연동을 고려하여 `Authorization` 헤더를 노출하고, 쿠키 기반 Refresh Token 처리를 위해 credentials를 허용했습니다. 인증이 필요한 API는 JWT 필터를 거쳐야 하며, 회원가입과 로그인 API만 인증 없이 호출할 수 있습니다.
+
+## 7. API 명세 📡
 
 사진 넣을 곳
 
-### Auth API
+| 기능 | Method | URL | 인증 필요 여부 | 설명 |
+|---|---|---|---|---|
+| 회원가입 | POST | `/api/auth/signup` | 불필요 | 이름, 로그인 ID, 비밀번호로 회원가입합니다. |
+| 로그인 | POST | `/api/auth/login` | 불필요 | 로그인 ID와 비밀번호를 검증하고 토큰을 발급합니다. |
+| 로그아웃 | POST | `/api/auth/logout` | 불필요 | Refresh Token 쿠키를 만료합니다. |
+| 내 정보 조회 | GET | `/api/auth/me` | 필요 | 사용자 정보, 진행도, 등급, 오늘의 문장을 조회합니다. |
+| 문제 시작 | POST | `/api/problems/start` | 필요 | `historyId` 기준으로 새 문제, 진행 중 문제, 복습 문제를 반환합니다. |
+| 단어 순서 제출 | POST | `/api/problems/order-answer/{problemId}` | 필요 | 단어 순서 맞추기 답안을 제출합니다. |
+| 보고 타이핑 제출 | POST | `/api/problems/copy-typing/{problemId}` | 필요 | 보고 타이핑 답안을 제출합니다. |
+| 안 보고 타이핑 제출 | POST | `/api/problems/blind-typing/{problemId}` | 필요 | 안 보고 타이핑 답안을 제출하고 GPT 의미 채점을 수행합니다. |
+| 풀이 기록 조회 | GET | `/api/me/problem-history` | 필요 | 사용자가 완료한 문제 기록을 조회합니다. |
 
-| Method | URL | 설명 | 인증 |
-|---|---|---|---|
-| POST | `/api/auth/signup` | 회원가입 | X |
-| POST | `/api/auth/login` | 로그인 및 토큰 발급 | X |
-| POST | `/api/auth/refresh` | Access Token 재발급 | X |
-| POST | `/api/auth/logout` | 로그아웃 | O |
+## 8. API 요청/응답 예시 🧾
 
-### Problem API
+### 회원가입
 
-| Method | URL | 설명 | 인증 |
-|---|---|---|---|
-| GET | `/api/problems/blind-typing/{level}` | 단계별 고전 문장 문제 조회 | O |
-| POST | `/api/problems/{problemId}/answer` | 문제 답안 제출 및 AI 피드백 반환 | O |
-
-### My Page API
-
-| Method | URL | 설명 | 인증 |
-|---|---|---|---|
-| GET | `/api/me/problem-history` | 내가 푼 문제 기록 조회 | O |
-| GET | `/api/me/level` | 내 레벨 및 경험치 조회 | O |
-| GET | `/api/me/profile` | 내 프로필 조회 | O |
-
-### Classic Sentence API
-
-| Method | URL | 설명 | 인증 |
-|---|---|---|---|
-| GET | `/api/classic-sentences` | 고전 문장 목록 조회 | O |
-| POST | `/api/admin/classic-sentences` | 고전 문장 등록 | O |
-| PATCH | `/api/admin/classic-sentences/{id}` | 고전 문장 수정 | O |
-| DELETE | `/api/admin/classic-sentences/{id}` | 고전 문장 삭제 | O |
-
----
-
-## 8. API 요청/응답 예시
-
-### 8.1 로그인 요청
-
-```http
-POST /api/auth/login
-Content-Type: application/json
-```
+Request
 
 ```json
 {
-  "loginId": "testuser",
-  "password": "1234"
+  "name": "박찬우",
+  "loginId": "seonbi",
+  "password": "password1234"
 }
 ```
 
-### 8.2 로그인 응답
+Response
 
 ```json
 {
-  "accessToken": "Bearer access-token-value",
-  "userId": 1,
-  "loginId": "testuser",
-  "name": "홍길동"
+  "name": "박찬우",
+  "accessToken": "access-token-value",
+  "loginId": "seonbi",
+  "totalSolvedCount": 0,
+  "currentStreak": 0,
+  "currentRank": "도사",
+  "nextRank": "정랑",
+  "remainingToNextRank": 1,
+  "todaySentence": null
 }
 ```
 
----
+### 로그인
 
-### 8.3 문제 조회 요청
+Request
+
+```json
+{
+  "loginId": "seonbi",
+  "password": "password1234"
+}
+```
+
+Response
+
+```json
+{
+  "name": "박찬우",
+  "accessToken": "access-token-value",
+  "loginId": "seonbi",
+  "totalSolvedCount": 7,
+  "currentStreak": 3,
+  "currentRank": "사인",
+  "nextRank": "집의",
+  "remainingToNextRank": 3,
+  "todaySentence": {
+    "sentenceId": 10,
+    "originalText": "天地元無酒後愁",
+    "readingText": "천지원무주후수",
+    "meaning": "천지에는 본래 술 뒤의 근심이 없다"
+  }
+}
+```
+
+### 내 정보 조회
+
+Request
 
 ```http
-GET /api/problems/blind-typing/1
+GET /api/auth/me
 Authorization: Bearer access-token-value
 ```
 
-### 8.4 문제 조회 응답
+Response
 
 ```json
 {
-  "problemId": 1,
-  "originalText": "聘禮竣事。海陸無恙。",
-  "readingText": "빙례준사해륙무양",
-  "question": "다음 고전 문장의 뜻을 입력하시오."
+  "name": "박찬우",
+  "accessToken": "access-token-value",
+  "loginId": "seonbi",
+  "totalSolvedCount": 7,
+  "currentStreak": 3,
+  "currentRank": "사인",
+  "nextRank": "집의",
+  "remainingToNextRank": 3,
+  "todaySentence": null
 }
 ```
 
----
+### 문제 시작
 
-### 8.5 답안 제출 요청
-
-```http
-POST /api/problems/1/answer
-Authorization: Bearer access-token-value
-Content-Type: application/json
-```
+Request
 
 ```json
 {
-  "answer": "사신의 예가 끝나고 바다와 육지가 모두 평안하도다."
+  "historyId": 1
 }
 ```
 
-### 8.6 답안 제출 응답
+Response
 
 ```json
 {
-  "problemId": 1,
+  "historyId": 1,
+  "problemId": 10,
+  "sentenceId": 25,
+  "isTodaySentence": true,
+  "completed": false,
+  "reviewMode": false,
+  "inProgress": true,
+  "originalText": "天地元無酒後愁",
+  "readingText": "천지원무주후수",
+  "meaning": "천지에는 본래 술 뒤의 근심이 없다",
+  "shuffledWords": ["술", "없다", "천지에는", "근심이", "본래", "뒤의"]
+}
+```
+
+### 단어 순서 제출
+
+Request
+
+```json
+{
+  "answer": "천지에는 본래 술 뒤의 근심이 없다"
+}
+```
+
+Response
+
+```json
+{
+  "problemId": 10,
   "correct": true,
-  "userAnswer": "사신의 예가 끝나고 바다와 육지가 모두 평안하도다.",
-  "meaning": "사신의 예가 끝나고 바다와 육지가 모두 평안하도다.",
-  "explanation": "아주 잘하였네. 제시된 뜻과 답이 정확히 일치하였네.",
-  "earnedExp": 10
+  "nextStep": "COPY_TYPING",
+  "completed": false,
+  "gptCorrect": null,
+  "gptReason": null
 }
 ```
 
----
+### 보고 타이핑 제출
 
-### 8.7 내가 푼 문제 조회 요청
+Request
+
+```json
+{
+  "answer": "천지에는 본래 술 뒤의 근심이 없다"
+}
+```
+
+Response
+
+```json
+{
+  "problemId": 10,
+  "correct": true,
+  "nextStep": "BLIND_TYPING",
+  "completed": false,
+  "gptCorrect": null,
+  "gptReason": null
+}
+```
+
+### 안 보고 타이핑 제출
+
+Request
+
+```json
+{
+  "answer": "천지에는 원래 술 뒤의 근심이 없다"
+}
+```
+
+Response
+
+```json
+{
+  "problemId": 10,
+  "correct": true,
+  "nextStep": "COMPLETED",
+  "completed": true,
+  "gptCorrect": true,
+  "gptReason": "잘하였네. 표현은 조금 다르지만 본래 술 뒤의 근심이 없다는 뜻을 온전히 담고 있구나."
+}
+```
+
+### 풀이 기록 조회
+
+Request
 
 ```http
 GET /api/me/problem-history
 Authorization: Bearer access-token-value
 ```
 
-### 8.8 내가 푼 문제 조회 응답
+Response
 
 ```json
 [
   {
-    "historyId": 6,
-    "originalText": "聘禮竣事。海陸無恙。",
-    "readingText": "빙례준사해륙무양",
-    "meaning": "사신의 예가 끝나고 바다와 육지가 모두 평안하도다.",
-    "userAnswer": "사신의 예가 끝나고 바다와 육지가 모두 평안하도다.",
+    "historyId": 1,
+    "originalText": "天地元無酒後愁",
+    "readingText": "천지원무주후수",
+    "meaning": "천지에는 본래 술 뒤의 근심이 없다",
+    "userAnswer": "천지에는 원래 술 뒤의 근심이 없다",
     "correct": true,
-    "explanation": "아주 잘하였네. 제시된 뜻과 답이 글자 하나 다르지 않게 같아서, 바른 풀이로 인정하네."
+    "explanation": "잘하였네. 표현은 조금 다르지만 본래 술 뒤의 근심이 없다는 뜻을 온전히 담고 있구나.",
+    "solvedAt": "2026-04-29T09:59:02.670601"
   }
 ]
 ```
 
----
+### 에러 응답
 
-## 9. 데이터베이스 설계
+```json
+{
+  "timestamp": "2026-05-08T12:00:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "historyId is required.",
+  "path": "/api/problems/start"
+}
+```
+
+## 9. 데이터베이스 설계 🗄️
 
 사진 넣을 곳
 
-### 주요 테이블
+### 주요 테이블 요약
 
-| 테이블명 | 역할 |
+| 테이블 | 설명 |
 |---|---|
-| `users` | 사용자 계정 정보 저장 |
-| `classic_sentences` | 고전 문장 원문, 독음, 뜻 데이터 저장 |
-| `problem_histories` | 사용자가 푼 문제 기록 저장 |
-| `user_levels` | 사용자 경험치 및 레벨 정보 저장 |
+| `members` | 서비스 사용자 정보를 저장합니다. |
+| `classic_sentences` | 고전 문장 원문, 독음, 해석, 사용 여부를 저장합니다. |
+| `problem_sessions` | 사용자가 진행 중이거나 완료한 문제 세션 상태를 저장합니다. |
+| `user_sentence_usages` | 사용자별로 이미 사용한 문장을 저장합니다. |
+| `user_progress` | 사용자별 총 풀이 수, 연속 풀이 일수, 마지막 풀이 날짜를 저장합니다. |
+| `solved_problem_histories` | 최종 완료된 문제 풀이 기록을 저장합니다. |
 
----
+### members
 
-### users
-
-| 컬럼명 | 설명 |
+| 컬럼 | 설명 |
 |---|---|
 | `id` | 사용자 PK |
-| `login_id` | 로그인 ID |
-| `password` | 암호화된 비밀번호 |
 | `name` | 사용자 이름 |
-| `created_at` | 생성일 |
-| `updated_at` | 수정일 |
-
----
+| `login_id` | 로그인 ID, unique 제약 조건 적용 |
+| `password` | BCrypt로 암호화된 비밀번호 |
 
 ### classic_sentences
 
-| 컬럼명 | 설명 |
+| 컬럼 | 설명 |
 |---|---|
 | `id` | 고전 문장 PK |
-| `original_text` | 고전 문장 원문 |
-| `reading_text` | 독음 |
-| `meaning` | 현대어 뜻 |
-| `used` | 문제 사용 여부 |
-| `created_at` | 생성일 |
-| `updated_at` | 수정일 |
+| `original_text` | 한자 원문 |
+| `reading_text` | 한글 독음 |
+| `meaning` | 해석 문장 |
+| `used` | 문장이 문제로 사용되었는지 여부 |
+| `created_at` | 생성 시각 |
+| `updated_at` | 수정 시각 |
 
----
+### problem_sessions
 
-### problem_histories
-
-| 컬럼명 | 설명 |
+| 컬럼 | 설명 |
 |---|---|
-| `id` | 학습 기록 PK |
-| `user_id` | 사용자 FK |
-| `classic_sentence_id` | 고전 문장 FK |
-| `user_answer` | 사용자가 입력한 답변 |
-| `correct` | 정답 여부 |
-| `explanation` | AI 피드백 및 해설 |
-| `created_at` | 풀이 일시 |
+| `id` | 문제 세션 PK |
+| `member_id` | 사용자 FK |
+| `sentence_id` | 고전 문장 FK |
+| `history_id` | 사용자 기준 풀이 순번 |
+| `today_sentence` | 오늘의 문장 여부 |
+| `shuffled_words` | 섞인 단어 목록을 문자열로 저장 |
+| `stage` | 현재 단계: `ORDER`, `COPY_TYPING`, `BLIND_TYPING`, `COMPLETED` |
+| `user_ordered_answer` | 단어 순서 맞추기 답안 |
+| `user_copy_typing_answer` | 보고 타이핑 답안 |
+| `user_blind_typing_answer` | 안 보고 타이핑 답안 |
+| `gpt_correct` | GPT 의미 채점 결과 |
+| `gpt_reason` | GPT 채점 사유 |
+| `correct` | 최종 정답 여부 |
+| `completed` | 최종 완료 여부 |
+| `created_at` | 생성 시각 |
+| `updated_at` | 수정 시각 |
+| `completed_at` | 완료 시각 |
 
----
+`problem_sessions`는 `member_id`와 `history_id` 조합에 unique 제약 조건을 두어, 같은 사용자가 같은 풀이 순번으로 중복 세션을 만들지 않도록 설계했습니다.
 
-### user_levels
+### user_sentence_usages
 
-| 컬럼명 | 설명 |
+| 컬럼 | 설명 |
 |---|---|
-| `id` | 레벨 정보 PK |
-| `user_id` | 사용자 FK |
-| `level` | 현재 레벨 |
-| `level_name` | 현재 문패 명칭 |
-| `exp` | 누적 경험치 |
-| `updated_at` | 수정일 |
+| `id` | 사용자별 문장 사용 기록 PK |
+| `member_id` | 사용자 FK |
+| `sentence_id` | 고전 문장 FK |
+| `used_at` | 사용 처리 시각 |
 
----
+`user_sentence_usages`는 `member_id`, `sentence_id` 조합에 unique 제약 조건을 두어 사용자별 문장 중복 풀이를 방지합니다.
 
-### ERD 개요
+### user_progress
+
+| 컬럼 | 설명 |
+|---|---|
+| `id` | 사용자 진행도 PK |
+| `member_id` | 사용자 FK, unique 제약 조건 적용 |
+| `total_solved_count` | 최종 완료한 총 문제 수 |
+| `current_streak` | 현재 연속 풀이 일수 |
+| `last_solved_date` | 마지막 풀이 날짜 |
+| `updated_at` | 수정 시각 |
+
+### solved_problem_histories
+
+| 컬럼 | 설명 |
+|---|---|
+| `id` | 풀이 기록 DB PK |
+| `member_id` | 사용자 FK |
+| `sentence_id` | 고전 문장 FK |
+| `history_id` | 사용자 기준 풀이 순번 |
+| `problem_session_id` | 연결된 문제 세션 ID |
+| `today_sentence` | 오늘의 문장 여부 |
+| `original_text` | 풀이 당시 한자 원문 |
+| `reading_text` | 풀이 당시 독음 |
+| `meaning` | 풀이 당시 해석 |
+| `shuffled_words` | 풀이 당시 섞인 단어 목록 |
+| `user_ordered_answer` | 단어 순서 맞추기 답안 |
+| `user_copy_typing_answer` | 보고 타이핑 답안 |
+| `user_blind_typing_answer` | 안 보고 타이핑 답안 |
+| `gpt_correct` | GPT 의미 채점 결과 |
+| `gpt_reason` | GPT 채점 사유 |
+| `correct` | 최종 정답 여부 |
+| `explanation` | 풀이 해설 |
+| `solved_at` | 풀이 완료 시각 |
+
+### Entity 관계
+
+| 관계 | 설명 |
+|---|---|
+| `members` 1 : N `problem_sessions` | 한 사용자는 여러 문제 세션을 가질 수 있습니다. |
+| `classic_sentences` 1 : N `problem_sessions` | 하나의 문장은 여러 문제 세션에서 참조될 수 있습니다. |
+| `members` 1 : N `solved_problem_histories` | 한 사용자는 여러 완료 기록을 가질 수 있습니다. |
+| `classic_sentences` 1 : N `solved_problem_histories` | 하나의 문장은 여러 완료 기록에서 참조될 수 있습니다. |
+| `members` 1 : 1 `user_progress` | 사용자별 진행도는 하나만 존재합니다. |
+| `members` 1 : N `user_sentence_usages` | 사용자별 문장 사용 여부를 독립적으로 기록합니다. |
+
+## 10. 프로젝트 구조 📁
 
 ```text
-users
-  1 ─── N problem_histories
-  1 ─── 1 user_levels
-
-classic_sentences
-  1 ─── N problem_histories
+src
+ └── main
+     ├── java
+     │   └── youngju
+     │       └── seonbimind
+     │           ├── SeonbiMindApplication.java
+     │           ├── auth
+     │           │   ├── config
+     │           │   ├── controller
+     │           │   ├── dto
+     │           │   ├── entity
+     │           │   ├── jwt
+     │           │   ├── repository
+     │           │   └── service
+     │           ├── classic
+     │           │   ├── gpt
+     │           │   │   ├── dto
+     │           │   │   └── service
+     │           │   ├── problem
+     │           │   │   ├── controller
+     │           │   │   ├── dto
+     │           │   │   ├── entity
+     │           │   │   ├── repository
+     │           │   │   └── service
+     │           │   ├── progress
+     │           │   │   ├── controller
+     │           │   │   ├── dto
+     │           │   │   ├── entity
+     │           │   │   ├── repository
+     │           │   │   └── service
+     │           │   └── sentence
+     │           │       ├── entity
+     │           │       └── repository
+     │           └── common
+     │               └── exception
+     └── resources
+         └── application.properties
 ```
-
----
-
-## 10. 프로젝트 구조
-
-```text
-seonbi-mind
-├── src
-│   ├── main
-│   │   ├── java
-│   │   │   └── youngju
-│   │   │       └── seonbimind
-│   │   │           ├── SeonbiMindApplication.java
-│   │   │           │
-│   │   │           ├── auth
-│   │   │           │   ├── config
-│   │   │           │   │   └── SecurityConfig.java
-│   │   │           │   │
-│   │   │           │   ├── controller
-│   │   │           │   │   └── AuthController.java
-│   │   │           │   │
-│   │   │           │   ├── dto
-│   │   │           │   │   ├── AuthResponse.java
-│   │   │           │   │   ├── AuthResult.java
-│   │   │           │   │   ├── LoginRequest.java
-│   │   │           │   │   ├── SignupRequest.java
-│   │   │           │   │   └── TodaySentenceResponse.java
-│   │   │           │   │
-│   │   │           │   ├── entity
-│   │   │           │   │   └── AuthMember.java
-│   │   │           │   │
-│   │   │           │   ├── jwt
-│   │   │           │   │   ├── JwtAuthenticationFilter.java
-│   │   │           │   │   └── JwtTokenProvider.java
-│   │   │           │   │
-│   │   │           │   ├── repository
-│   │   │           │   │   └── AuthMemberRepository.java
-│   │   │           │   │
-│   │   │           │   └── service
-│   │   │           │       ├── AuthService.java
-│   │   │           │       └── CurrentMemberService.java
-│   │   │           │
-│   │   │           ├── classic
-│   │   │           │   ├── gpt
-│   │   │           │   │   ├── dto
-│   │   │           │   │   │   └── MeaningEvaluationResult.java
-│   │   │           │   │   │
-│   │   │           │   │   └── service
-│   │   │           │   │       └── GptMeaningEvaluationService.java
-│   │   │           │   │
-│   │   │           │   ├── problem
-│   │   │           │   │   ├── controller
-│   │   │           │   │   │   └── ProblemController.java
-│   │   │           │   │   │
-│   │   │           │   │   ├── dto
-│   │   │           │   │   │   ├── AnswerRequest.java
-│   │   │           │   │   │   ├── ProblemAnswerResponse.java
-│   │   │           │   │   │   ├── ProblemStartRequest.java
-│   │   │           │   │   │   └── ProblemStartResponse.java
-│   │   │           │   │   │
-│   │   │           │   │   ├── entity
-│   │   │           │   │   │   ├── ProblemSession.java
-│   │   │           │   │   │   ├── ProblemSessionStage.java
-│   │   │           │   │   │   └── UserSentenceUsage.java
-│   │   │           │   │   │
-│   │   │           │   │   ├── repository
-│   │   │           │   │   │   ├── ProblemSessionRepository.java
-│   │   │           │   │   │   └── UserSentenceUsageRepository.java
-│   │   │           │   │   │
-│   │   │           │   │   └── service
-│   │   │           │   │       └── ProblemService.java
-│   │   │           │   │
-│   │   │           │   ├── progress
-│   │   │           │   │   ├── controller
-│   │   │           │   │   │   └── MeProgressController.java
-│   │   │           │   │   │
-│   │   │           │   │   ├── dto
-│   │   │           │   │   │   ├── ProblemHistoryResponse.java
-│   │   │           │   │   │   └── ProgressResponse.java
-│   │   │           │   │   │
-│   │   │           │   │   ├── entity
-│   │   │           │   │   │   ├── LearningRank.java
-│   │   │           │   │   │   ├── SolvedProblemHistory.java
-│   │   │           │   │   │   └── UserProgress.java
-│   │   │           │   │   │
-│   │   │           │   │   ├── repository
-│   │   │           │   │   │   ├── SolvedProblemHistoryRepository.java
-│   │   │           │   │   │   └── UserProgressRepository.java
-│   │   │           │   │   │
-│   │   │           │   │   └── service
-│   │   │           │   │       └── ProgressService.java
-│   │   │           │   │
-│   │   │           │   └── sentence
-│   │   │           │       ├── entity
-│   │   │           │       │   └── ClassicSentence.java
-│   │   │           │       │
-│   │   │           │       └── repository
-│   │   │           │           └── ClassicSentenceRepository.java
-│   │   │           │
-│   │   │           └── common
-│   │   │               └── exception
-│   │   │                   └── ApiExceptionHandler.java
-│   │   │
-│   │   └── resources
-│   │       ├── static
-│   │       ├── templates
-│   │       └── application.properties
-│   │
-│   └── test
-│
-├── build.gradle
-├── settings.gradle
-└── README.md
-```
-
-### 패키지별 역할
 
 | 패키지 | 역할 |
 |---|---|
-| `auth` | 회원가입, 로그인, 사용자 인증 관련 기능 관리 |
-| `auth.config` | Spring Security 설정 및 인증/인가 정책 관리 |
-| `auth.jwt` | JWT 토큰 생성, 검증, 인증 필터 처리 |
-| `classic.gpt` | GPT 기반 사용자 답안 의미 평가 및 AI 피드백 생성 |
-| `classic.problem` | 문제 세션 생성, 단계별 문제 제공, 답안 제출 및 채점 처리 |
-| `classic.progress` | 사용자 학습 기록, 풀이 이력, 경험치, 문패 등급 관리 |
-| `classic.sentence` | 고전 문장 데이터 엔티티 및 Repository 관리 |
-| `common.exception` | 전역 예외 처리 및 API 에러 응답 관리 |
-| `resources` | 정적 리소스, 템플릿, 애플리케이션 설정 파일 관리 |
+| `auth.config` | Spring Security, CORS, PasswordEncoder 설정을 담당합니다. |
+| `auth.controller` | 회원가입, 로그인, 로그아웃, 내 정보 조회 API를 제공합니다. |
+| `auth.dto` | 인증 요청과 응답 DTO를 정의합니다. |
+| `auth.entity` | 사용자 Entity를 정의합니다. |
+| `auth.jwt` | JWT 생성, 검증, 인증 필터를 담당합니다. |
+| `auth.repository` | 사용자 조회와 중복 검사를 담당합니다. |
+| `auth.service` | 인증 비즈니스 로직과 현재 로그인 사용자 조회를 담당합니다. |
+| `classic.gpt` | GPT API 의미 채점 요청과 응답 파싱을 담당합니다. |
+| `classic.problem` | 문제 시작, 단계별 답안 제출, 문제 세션 관리를 담당합니다. |
+| `classic.progress` | 사용자 진행도, 등급, 풀이 기록 조회를 담당합니다. |
+| `classic.sentence` | 고전 문장 Entity와 문장 조회 Repository를 담당합니다. |
+| `common.exception` | 공통 API 예외 응답 구조를 담당합니다. |
 
----
+## 11. 실행 방법 ⚙️
 
-## 11. 실행 방법
-
-### 11.1 프로젝트 클론
+### 프로젝트 클론
 
 ```bash
-git clone https://github.com/사용자명/seonbi-mind.git
-cd seonbi-mind
+git clone https://github.com/사용자명/레포지토리명.git
+cd 레포지토리명
 ```
 
----
+### DB 생성 및 설정
 
-### 11.2 환경 변수 설정
-
-`application.yml` 또는 `application-prod.yml`에 다음 값을 설정합니다.
-
-```yml
-server:
-  port: 8080
-
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/seonbimind
-    username: root
-    password: password
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-app:
-  jwt:
-    secret: your-jwt-secret-key
-    access-token-expiration: 3600000
-  cors:
-    allowed-origins: http://localhost:3000
-
-openai:
-  api-key: your-openai-api-key
-```
-
----
-
-### 11.3 MySQL 데이터베이스 생성
+MySQL에 사용할 데이터베이스를 생성합니다.
 
 ```sql
-CREATE DATABASE seonbimind;
+CREATE DATABASE seonbimind
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 ```
 
----
+### application.properties 설정
 
-### 11.4 애플리케이션 실행
+현재 프로젝트는 `src/main/resources/application.properties`를 사용합니다. 민감한 값은 환경 변수로 주입하는 구조입니다.
+
+```properties
+spring.application.name=SeonbiMind
+
+server.port=${SERVER_PORT:8080}
+
+spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/seonbimind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+spring.datasource.username=${DB_USERNAME:seonbi}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.hibernate.ddl-auto=${JPA_DDL_AUTO:update}
+spring.jpa.show-sql=${JPA_SHOW_SQL:false}
+spring.jpa.properties.hibernate.format_sql=${JPA_FORMAT_SQL:false}
+
+jwt.secret=${JWT_SECRET}
+jwt.access-token-expiration-ms=${JWT_ACCESS_TOKEN_EXPIRATION_MS:3600000}
+jwt.refresh-token-expiration-ms=${JWT_REFRESH_TOKEN_EXPIRATION_MS:1209600000}
+
+openai.api-key=${OPENAI_API_KEY}
+openai.model=${OPENAI_MODEL:gpt-5.5}
+openai.responses-url=${OPENAI_RESPONSES_URL:https://api.openai.com/v1/responses}
+
+app.cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+```
+
+### 필요한 환경 변수 예시
+
+```bash
+export DB_URL="jdbc:mysql://localhost:3306/seonbimind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
+export DB_USERNAME="seonbi"
+export DB_PASSWORD="your_db_password"
+export JWT_SECRET="your-jwt-secret-key"
+export OPENAI_API_KEY="your-openai-api-key"
+export CORS_ALLOWED_ORIGINS="http://localhost:5173"
+```
+
+Windows PowerShell 예시입니다.
+
+```powershell
+$env:DB_URL="jdbc:mysql://localhost:3306/seonbimind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
+$env:DB_USERNAME="seonbi"
+$env:DB_PASSWORD="your_db_password"
+$env:JWT_SECRET="your-jwt-secret-key"
+$env:OPENAI_API_KEY="your-openai-api-key"
+$env:CORS_ALLOWED_ORIGINS="http://localhost:5173"
+```
+
+### Gradle 빌드
+
+```bash
+./gradlew build
+```
+
+Windows 환경에서는 다음 명령을 사용할 수 있습니다.
+
+```powershell
+.\gradlew.bat build
+```
+
+### 서버 실행
 
 ```bash
 ./gradlew bootRun
 ```
 
-또는
+Windows 환경에서는 다음 명령을 사용할 수 있습니다.
 
-```bash
-./gradlew build
-java -jar build/libs/seonbi-mind.jar
+```powershell
+.\gradlew.bat bootRun
 ```
 
----
-
-### 11.5 배포 실행
-
-```bash
-chmod +x deploy.sh
-./deploy.sh
-```
-
----
-
-## 12. 트러블슈팅
-
-### 12.1 OpenAI API 호출 시 429 insufficient_quota 발생
-
-#### 문제 상황
-
-AI 훈장님 피드백 기능을 테스트하는 과정에서 OpenAI API 요청이 실패하고, 서버에서는 502 응답이 반환되는 문제가 발생했습니다.
+기본 서버 포트는 `8080`입니다.
 
 ```text
-OpenAI API request failed.
-status=429 TOO_MANY_REQUESTS
-code=insufficient_quota
+http://localhost:8080
 ```
 
-#### 원인
+### 배포 정보
 
-백엔드 로직의 오류가 아니라 OpenAI API 계정의 사용량 또는 결제 한도 문제였습니다.
+| 항목 | 내용 |
+|---|---|
+| 백엔드 배포 주소 | 배포 주소 추가 예정 |
+| 프론트엔드 주소 | 추가 예정 |
+| 배포 방식 | 추가 예정 |
 
-외부 API 의존성이 있는 기능이기 때문에, API 호출 실패 시 전체 문제 풀이 흐름이 중단될 수 있었습니다.
+## 12. 트러블슈팅 🧯
 
-#### 해결 과정
+### JWT 인증 실패
 
-AI API 호출 실패 상황을 예외로 분리하고, 사용자에게 서버 오류가 아닌 피드백 생성 실패로 인식될 수 있도록 처리하였습니다.
+**문제 상황**  
+인증이 필요한 API를 호출했을 때 401 응답이 발생하고, 서버에서 인증된 사용자를 찾을 수 없는 문제가 발생할 수 있습니다.
 
-또한 기본 해설 데이터를 우선 반환할 수 있는 구조로 개선하여 외부 API 장애가 전체 서비스 장애로 이어지지 않도록 설계하였습니다.
+**원인**  
+`Authorization` 헤더가 없거나 `Bearer ` 접두사가 빠진 경우, Access Token이 만료된 경우, 또는 `jwt.secret` 값이 토큰 생성 시점과 검증 시점에 다르면 JWT 검증에 실패합니다.
 
-#### 배운 점
+**해결 방법**  
+클라이언트에서 `Authorization: Bearer {accessToken}` 형식으로 헤더를 전달하도록 하고, 서버 실행 환경의 `JWT_SECRET` 값을 일관되게 설정합니다. 인증 필터에서는 Access Token 타입과 만료 시간을 검증한 뒤에만 `SecurityContextHolder`에 인증 정보를 저장하도록 구성했습니다.
 
-외부 API를 사용하는 기능은 반드시 실패 가능성을 고려해야 하며, 핵심 서비스 로직과 외부 연동 로직을 분리해야 안정적인 백엔드 구조를 만들 수 있다는 점을 배웠습니다.
+**결과**  
+인증이 필요한 문제 풀이 API와 내 정보 조회 API에서 request body로 사용자 ID를 받지 않고도 현재 로그인 사용자를 안정적으로 식별할 수 있게 되었습니다.
 
----
+### DB 연동 오류
 
-### 12.2 CORS 설정 문제
+**문제 상황**  
+서버 실행 시 DataSource 설정 오류가 발생하거나 MySQL 연결에 실패할 수 있습니다.
 
-#### 문제 상황
+**원인**  
+`DB_URL`, `DB_USERNAME`, `DB_PASSWORD` 환경 변수가 올바르게 설정되지 않았거나, MySQL 데이터베이스가 생성되지 않은 상태에서 애플리케이션을 실행하면 연결에 실패합니다.
 
-프론트엔드와 백엔드를 분리하여 개발하는 과정에서 브라우저에서 API 요청이 차단되는 문제가 발생했습니다.
+**해결 방법**  
+`application.properties`에서 MySQL 드라이버와 datasource 설정을 명확히 지정하고, 환경 변수로 DB 접속 정보를 주입하도록 구성했습니다. 로컬 실행 전 `seonbimind` 데이터베이스를 생성하고 계정 권한을 확인해야 합니다.
 
-#### 원인
+**결과**  
+환경별 DB 접속 정보를 코드에 직접 작성하지 않고 분리할 수 있어, 로컬 개발 환경과 배포 환경에서 설정을 유연하게 변경할 수 있습니다.
 
-백엔드 서버의 CORS 허용 Origin 설정에 프론트엔드 주소가 포함되어 있지 않았습니다.
+### GPT API 키 누락 또는 외부 API 호출 실패
 
-로컬 개발 환경에서는 `localhost:3000`, 배포 환경에서는 프론트엔드 도메인을 허용해야 했습니다.
+**문제 상황**  
+안 보고 타이핑 단계에서 GPT 의미 채점을 수행할 때 503 또는 502 응답이 발생할 수 있습니다.
 
-#### 해결 과정
+**원인**  
+`OPENAI_API_KEY`가 설정되지 않으면 서비스는 503 응답을 반환합니다. API Key가 설정되어 있어도 OpenAI API에서 quota, 인증, 네트워크 오류가 발생하면 502 응답으로 변환됩니다.
 
-`application.yml`에 CORS 허용 Origin을 환경별로 관리하도록 설정하였습니다.
+**해결 방법**  
+`GptMeaningEvaluationService`에서 API Key가 비어 있는 경우를 먼저 검사하고, OpenAI API 호출 실패는 `ResponseStatusException`으로 감싸 공통 예외 응답 구조로 내려주도록 처리했습니다. API Key와 모델명은 환경 변수 기반 설정으로 분리했습니다.
 
-```yml
-app:
-  cors:
-    allowed-origins: http://localhost:3000,https://frontend-domain.com
-```
+**결과**  
+GPT 채점 실패 상황을 프론트엔드에서 일관된 에러 응답으로 처리할 수 있고, 민감한 API Key를 코드에 하드코딩하지 않게 되었습니다.
 
-Spring Security 설정에서 CORS를 활성화하고, 배포 환경에서는 프론트엔드 도메인만 허용하도록 구성하였습니다.
+### 문제 중복 출제와 진행 중 문제 재시작 문제
 
-#### 배운 점
+**문제 상황**  
+사용자가 같은 문제 번호로 여러 번 문제 시작 API를 호출하면 새 문제가 중복으로 출제될 수 있습니다.
 
-프론트엔드와 백엔드가 분리된 구조에서는 CORS 설정이 필수이며, 개발 환경과 운영 환경의 Origin을 구분해서 관리해야 한다는 점을 배웠습니다.
+**원인**  
+문제 시작 API가 단순히 호출될 때마다 새 문장을 뽑는 방식이면, 사용자의 풀이 순번과 진행 중 세션을 구분하기 어렵습니다.
 
----
+**해결 방법**  
+`historyId`를 사용자 기준 풀이 순번으로 사용하고, `problem_sessions`에 `member_id`, `history_id` unique 제약 조건을 적용했습니다. 문제 시작 시 이미 완료한 번호는 복습 모드로 반환하고, 진행 중인 번호는 기존 세션을 재사용하며, 다음 번호일 때만 새 문제를 출제하도록 분기했습니다.
 
-### 12.3 JWT 인증이 필요한 API에서 401 Unauthorized 발생
+**결과**  
+프론트엔드가 같은 문제 번호를 다시 요청해도 중복 데이터가 생성되지 않고, 사용자는 진행 중이던 문제를 안정적으로 이어서 풀 수 있습니다.
 
-#### 문제 상황
+### 사용자별 풀이 기록 순번 문제
 
-내가 푼 문제 조회 API를 호출할 때 `401 Unauthorized` 응답이 발생했습니다.
+**문제 상황**  
+DB PK를 그대로 `historyId`로 응답하면 여러 사용자가 함께 사용할 때 사용자별 1번, 2번, 3번 문제 구조가 깨질 수 있습니다.
 
-```http
-GET /api/me/problem-history
-Authorization: Bearer token
-```
+**원인**  
+DB PK는 전체 테이블 기준으로 증가하므로, A 사용자의 두 번째 풀이 기록 ID가 다른 사용자의 기록 때문에 3 또는 4가 될 수 있습니다.
 
-#### 원인
+**해결 방법**  
+`SolvedProblemHistory`에 DB PK와 별개로 사용자 기준 `historyId`를 추가하고, `member_id`, `history_id` 조합을 unique로 관리했습니다. 기존 기록 중 `historyId`가 비어 있는 경우에는 사용자별 풀이 완료 시각 기준으로 순번을 보정하도록 구현했습니다.
 
-Authorization Header의 Bearer Token 형식이 잘못되었거나, Spring Security 필터에서 토큰을 정상적으로 파싱하지 못한 것이 원인이었습니다.
+**결과**  
+각 사용자가 자신의 풀이 기록을 1번부터 순차적으로 조회할 수 있게 되었고, 문제 복습 API에서도 사용자 기준 순번을 안정적으로 사용할 수 있습니다.
 
-#### 해결 과정
+## 13. 프로젝트를 통해 배운 점 🌱
 
-JWT 인증 필터에서 Authorization Header를 확인하고, `Bearer ` 접두어가 있는 경우에만 토큰을 추출하도록 처리하였습니다.
+이 프로젝트를 구현하면서 계층형 아키텍처의 역할 분리가 왜 중요한지 직접 경험했습니다. Controller는 요청과 응답을 처리하고, Service는 인증된 사용자 기준의 비즈니스 흐름을 담당하며, Repository는 JPA 쿼리와 데이터 접근에 집중하도록 나누었습니다. 그 결과 문제 풀이, 진행도, 인증 로직이 서로 섞이지 않고 유지보수하기 쉬운 구조가 되었습니다.
 
-또한 인증이 필요한 API와 인증이 필요 없는 API를 명확히 분리하였습니다.
+JWT 인증을 직접 구현하면서 Access Token과 Refresh Token의 역할을 분리하고, Security Filter에서 인증 객체를 구성하는 흐름을 이해할 수 있었습니다. 특히 인증된 사용자 정보를 request body로 받지 않고 토큰에서 가져오는 구조를 적용하면서, API 보안과 데이터 신뢰성을 함께 고려하는 경험을 했습니다.
 
-#### 배운 점
+JPA Entity 설계에서는 진행 중인 문제와 완료된 풀이 기록을 분리하는 방식이 중요했습니다. 문제를 시작했다고 바로 완료 기록을 만들지 않고, 최종 GPT 의미 채점까지 성공했을 때만 기록과 진행도를 갱신하도록 설계했습니다. 이를 통해 실제 서비스에서 사용자의 중간 이탈, 재시도, 복습 흐름을 더 안정적으로 처리할 수 있었습니다.
 
-JWT 인증 구조에서는 토큰 발급뿐만 아니라, 요청마다 토큰을 검증하고 SecurityContext에 사용자 정보를 저장하는 흐름이 중요하다는 점을 이해했습니다.
+또한 프론트엔드 연동을 고려해 DTO를 분리하고, 응답에 `completed`, `reviewMode`, `inProgress`, `historyId` 같은 상태 정보를 포함했습니다. 이 과정에서 백엔드 API가 단순 데이터 제공을 넘어 프론트엔드 화면 흐름을 안정적으로 이끌 수 있어야 한다는 점을 배웠습니다.
 
----
+## 14. 향후 개선 방향 🔧
 
-### 12.4 데이터베이스 테이블명 및 컬럼명 불일치 문제
+| 개선 방향 | 설명 |
+|---|---|
+| 테스트 코드 작성 | 인증, 문제 풀이 단계, GPT 채점 실패, 진행 중 문제 재개 등 핵심 흐름에 대한 단위 테스트와 통합 테스트를 추가할 수 있습니다. |
+| Swagger API 문서화 | 현재 README와 코드 기준으로 정리된 API를 Swagger/OpenAPI로 문서화하면 프론트엔드와 협업 효율을 높일 수 있습니다. |
+| Refresh Token 저장소 개선 | 현재 Refresh Token은 쿠키로 내려주지만 서버 저장소는 없습니다. Redis 또는 DB 기반 저장소를 추가하면 재발급과 강제 로그아웃 처리를 더 안전하게 구현할 수 있습니다. |
+| 예외 응답 구조 통일 | Spring Security 인증 실패 응답과 `ApiExceptionHandler` 응답 구조를 더 통일하면 클라이언트 에러 처리가 쉬워집니다. |
+| 로그 관리 | 문제 풀이 실패, GPT API 호출 실패, 인증 실패 등에 대한 로그를 체계적으로 남기면 운영 환경에서 원인 분석이 쉬워집니다. |
+| 관리자 기능 확장 | 현재 관리자 API는 없으므로, 고전 문장 등록·수정·삭제 기능을 별도 권한 기반으로 확장할 수 있습니다. |
+| 배포 자동화 | GitHub Actions와 배포 서버를 연동해 빌드, 테스트, 배포 과정을 자동화할 수 있습니다. |
+| 보안 설정 강화 | 운영 환경에서는 Refresh Token 쿠키의 `secure` 옵션을 true로 설정하고, CORS 허용 Origin을 배포 도메인으로 제한할 수 있습니다. |
 
-#### 문제 상황
-
-고전 문장 데이터를 INSERT하는 과정에서 테이블명 또는 컬럼명이 일치하지 않아 SQL 실행 오류가 발생했습니다.
-
-#### 원인
-
-초기 설계에서는 `classic_sentence`와 같은 단수형 테이블명을 고려했지만, 실제 사용 테이블은 `classic_sentences`로 정리하였습니다.
-
-또한 Java Entity 필드명과 DB 컬럼명이 다를 경우 매핑 문제가 발생할 수 있었습니다.
-
-#### 해결 과정
-
-고전 문장 테이블명을 `classic_sentences`로 통일하고, Entity의 `@Column` 설정과 SQL INSERT 문을 동일한 컬럼명 기준으로 정리하였습니다.
-
-```sql
-INSERT INTO classic_sentences
-(original_text, reading_text, meaning, used, created_at, updated_at)
-VALUES
-('詩者原於德性。發於才情。', '시자원어덕성 발어재정', '시란 덕성에 뿌리를 두고 재주와 정에서 피어나는 것이니라.', false, NOW(), NOW());
-```
-
-#### 배운 점
-
-DB 설계 초기에 테이블명과 컬럼명 규칙을 정하고, Entity와 SQL 스크립트에서 일관되게 유지하는 것이 중요하다는 점을 배웠습니다.
-
----
-
-### 12.5 배포 환경에서 8080 포트 충돌 발생
-
-#### 문제 상황
-
-GCP VM에서 Spring Boot 애플리케이션을 실행할 때 8080 포트가 이미 사용 중이라는 오류가 발생했습니다.
-
-#### 원인
-
-기존에 실행 중이던 애플리케이션 프로세스가 종료되지 않아 동일한 포트를 점유하고 있었습니다.
-
-#### 해결 과정
-
-8080 포트를 사용하는 프로세스를 확인하고 종료한 뒤 다시 배포를 진행하였습니다.
-
-```bash
-sudo lsof -i :8080
-sudo kill -9 {PID}
-```
-
-필요한 경우 `application.yml`에서 서버 포트를 변경하여 실행할 수 있도록 구성하였습니다.
-
-```yml
-server:
-  port: 8081
-```
-
-#### 배운 점
-
-배포 환경에서는 애플리케이션 실행 여부와 포트 사용 상태를 반드시 확인해야 하며, 반복 배포를 위해 실행 스크립트에서 기존 프로세스 종료 로직을 포함하는 것이 필요하다는 점을 배웠습니다.
-
----
-
-## 13. 프로젝트를 통해 배운 점
-
-### 13.1 데이터 기반 서비스 설계
-
-선비마인드는 단순 CRUD 서비스가 아니라 고전 문장 데이터를 기반으로 문제를 생성하고, 사용자의 풀이 기록을 저장하는 학습 서비스입니다.
-
-이를 구현하면서 데이터가 단순히 저장되는 것이 아니라 서비스 흐름 안에서 어떻게 활용되는지 고민할 수 있었습니다.
-
----
-
-### 13.2 외부 AI API 연동 구조
-
-AI 피드백 기능을 구현하면서 외부 API 호출 구조, 예외 처리, 실패 대응 방식의 중요성을 배웠습니다.
-
-특히 외부 API는 항상 성공한다고 가정하면 안 되며, 장애가 발생하더라도 핵심 서비스가 유지될 수 있도록 설계해야 한다는 점을 경험했습니다.
-
----
-
-### 13.3 인증이 필요한 사용자 중심 API 설계
-
-내가 푼 문제 조회, 레벨 조회, 학습 기록 저장 기능은 모두 사용자 식별이 필요합니다.
-
-JWT 인증을 기반으로 사용자를 식별하고, 사용자별 데이터를 분리하여 제공하는 구조를 구현하면서 인증과 인가의 역할을 명확히 이해할 수 있었습니다.
-
----
-
-### 13.4 백엔드 예외 처리의 중요성
-
-AI API 실패, 잘못된 답안 제출, 존재하지 않는 문제 조회, 인증 실패 등 다양한 예외 상황을 처리하면서 백엔드에서 일관된 응답 구조를 제공하는 것이 중요하다는 점을 배웠습니다.
-
----
-
-### 13.5 배포 환경 구성 경험
-
-로컬 개발 환경을 넘어 GCP VM에 백엔드를 배포하고, CORS, 포트, 환경 변수, 배포 스크립트 등을 설정하면서 실제 서비스 운영에 필요한 기본적인 백엔드 배포 흐름을 경험했습니다.
-
----
-
-## 14. 향후 개선 방향
-
-### 14.1 문제 추천 기능 고도화
-
-사용자의 오답 기록과 취약한 유형을 분석하여 개인 맞춤형 문제를 추천하는 기능을 추가할 예정입니다.
-
----
-
-### 14.2 오답 노트 기능 추가
-
-사용자가 틀린 문제를 따로 모아 복습할 수 있도록 오답 노트 기능을 구현할 예정입니다.
-
----
-
-### 14.3 AI 피드백 품질 개선
-
-사용자의 답변 수준에 따라 더 구체적인 해설을 제공하고, 고전 표현의 실제 활용 예시까지 제공할 수 있도록 AI 피드백 프롬프트를 개선할 예정입니다.
-
----
-
-### 14.4 관리자용 고전 문장 관리 기능 확장
-
-관리자가 고전 문장을 직접 등록, 수정, 삭제하고 문제 사용 여부를 관리할 수 있는 관리자 기능을 고도화할 예정입니다.
-
----
-
-### 14.5 랭킹 및 학습 통계 기능 추가
-
-사용자의 누적 학습량, 정답률, 레벨 등을 기반으로 랭킹과 학습 통계를 제공하여 지속적인 학습 동기를 강화할 예정입니다.
-
----
-
-### 14.6 프론트엔드와의 연동 완성도 향상
-
-프론트엔드 배포 도메인과 백엔드 API 서버를 안정적으로 연동하고, 운영 환경 CORS 및 인증 흐름을 최종적으로 정리할 예정입니다.
-
----
-
-## 15. 개발자
+## 15. 개발자 👤
 
 | 이름 | 역할 |
 |---|---|
 | 박찬우 | Backend Developer |
-
-### 담당 내용
-
-- Spring Boot 기반 REST API 설계 및 구현
-- 고전 문장 데이터베이스 설계
-- 문제 조회 및 답안 제출 기능 구현
-- AI 훈장님 피드백 연동
-- 사용자 학습 기록 조회 API 구현
-- JWT 기반 인증 구조 설계
-- MySQL 연동 및 JPA Entity 설계
-- GCP 기반 백엔드 배포 환경 구성
-
-
