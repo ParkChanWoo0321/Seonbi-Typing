@@ -519,60 +519,131 @@ Response
 
 ## 10. 프로젝트 구조 📁
 
+## 10. 프로젝트 구조
+
 ```text
-src
- └── main
-     ├── java
-     │   └── youngju
-     │       └── seonbimind
-     │           ├── SeonbiMindApplication.java
-     │           ├── auth
-     │           │   ├── config
-     │           │   ├── controller
-     │           │   ├── dto
-     │           │   ├── entity
-     │           │   ├── jwt
-     │           │   ├── repository
-     │           │   └── service
-     │           ├── classic
-     │           │   ├── gpt
-     │           │   │   ├── dto
-     │           │   │   └── service
-     │           │   ├── problem
-     │           │   │   ├── controller
-     │           │   │   ├── dto
-     │           │   │   ├── entity
-     │           │   │   ├── repository
-     │           │   │   └── service
-     │           │   ├── progress
-     │           │   │   ├── controller
-     │           │   │   ├── dto
-     │           │   │   ├── entity
-     │           │   │   ├── repository
-     │           │   │   └── service
-     │           │   └── sentence
-     │           │       ├── entity
-     │           │       └── repository
-     │           └── common
-     │               └── exception
-     └── resources
-         └── application.properties
+seonbi-mind
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── youngju
+│   │   │       └── seonbimind
+│   │   │           ├── SeonbiMindApplication.java
+│   │   │           │
+│   │   │           ├── auth
+│   │   │           │   ├── config
+│   │   │           │   │   └── SecurityConfig.java
+│   │   │           │   │
+│   │   │           │   ├── controller
+│   │   │           │   │   └── AuthController.java
+│   │   │           │   │
+│   │   │           │   ├── dto
+│   │   │           │   │   ├── AuthResponse.java
+│   │   │           │   │   ├── AuthResult.java
+│   │   │           │   │   ├── LoginRequest.java
+│   │   │           │   │   ├── SignupRequest.java
+│   │   │           │   │   └── TodaySentenceResponse.java
+│   │   │           │   │
+│   │   │           │   ├── entity
+│   │   │           │   │   └── AuthMember.java
+│   │   │           │   │
+│   │   │           │   ├── jwt
+│   │   │           │   │   ├── JwtAuthenticationFilter.java
+│   │   │           │   │   └── JwtTokenProvider.java
+│   │   │           │   │
+│   │   │           │   ├── repository
+│   │   │           │   │   └── AuthMemberRepository.java
+│   │   │           │   │
+│   │   │           │   └── service
+│   │   │           │       ├── AuthService.java
+│   │   │           │       └── CurrentMemberService.java
+│   │   │           │
+│   │   │           ├── classic
+│   │   │           │   ├── gpt
+│   │   │           │   │   ├── dto
+│   │   │           │   │   │   └── MeaningEvaluationResult.java
+│   │   │           │   │   │
+│   │   │           │   │   └── service
+│   │   │           │   │       └── GptMeaningEvaluationService.java
+│   │   │           │   │
+│   │   │           │   ├── problem
+│   │   │           │   │   ├── controller
+│   │   │           │   │   │   └── ProblemController.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── dto
+│   │   │           │   │   │   ├── AnswerRequest.java
+│   │   │           │   │   │   ├── ProblemAnswerResponse.java
+│   │   │           │   │   │   ├── ProblemStartRequest.java
+│   │   │           │   │   │   └── ProblemStartResponse.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── entity
+│   │   │           │   │   │   ├── ProblemSession.java
+│   │   │           │   │   │   ├── ProblemSessionStage.java
+│   │   │           │   │   │   └── UserSentenceUsage.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── repository
+│   │   │           │   │   │   ├── ProblemSessionRepository.java
+│   │   │           │   │   │   └── UserSentenceUsageRepository.java
+│   │   │           │   │   │
+│   │   │           │   │   └── service
+│   │   │           │   │       └── ProblemService.java
+│   │   │           │   │
+│   │   │           │   ├── progress
+│   │   │           │   │   ├── controller
+│   │   │           │   │   │   └── MeProgressController.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── dto
+│   │   │           │   │   │   ├── ProblemHistoryResponse.java
+│   │   │           │   │   │   └── ProgressResponse.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── entity
+│   │   │           │   │   │   ├── LearningRank.java
+│   │   │           │   │   │   ├── SolvedProblemHistory.java
+│   │   │           │   │   │   └── UserProgress.java
+│   │   │           │   │   │
+│   │   │           │   │   ├── repository
+│   │   │           │   │   │   ├── SolvedProblemHistoryRepository.java
+│   │   │           │   │   │   └── UserProgressRepository.java
+│   │   │           │   │   │
+│   │   │           │   │   └── service
+│   │   │           │   │       └── ProgressService.java
+│   │   │           │   │
+│   │   │           │   └── sentence
+│   │   │           │       ├── entity
+│   │   │           │       │   └── ClassicSentence.java
+│   │   │           │       │
+│   │   │           │       └── repository
+│   │   │           │           └── ClassicSentenceRepository.java
+│   │   │           │
+│   │   │           └── common
+│   │   │               └── exception
+│   │   │                   └── ApiExceptionHandler.java
+│   │   │
+│   │   └── resources
+│   │       ├── static
+│   │       ├── templates
+│   │       └── application.properties
+│   │
+│   └── test
+│
+├── build.gradle
+├── settings.gradle
+└── README.md
 ```
+
+### 패키지별 역할
 
 | 패키지 | 역할 |
 |---|---|
-| `auth.config` | Spring Security, CORS, PasswordEncoder 설정을 담당합니다. |
-| `auth.controller` | 회원가입, 로그인, 로그아웃, 내 정보 조회 API를 제공합니다. |
-| `auth.dto` | 인증 요청과 응답 DTO를 정의합니다. |
-| `auth.entity` | 사용자 Entity를 정의합니다. |
-| `auth.jwt` | JWT 생성, 검증, 인증 필터를 담당합니다. |
-| `auth.repository` | 사용자 조회와 중복 검사를 담당합니다. |
-| `auth.service` | 인증 비즈니스 로직과 현재 로그인 사용자 조회를 담당합니다. |
-| `classic.gpt` | GPT API 의미 채점 요청과 응답 파싱을 담당합니다. |
-| `classic.problem` | 문제 시작, 단계별 답안 제출, 문제 세션 관리를 담당합니다. |
-| `classic.progress` | 사용자 진행도, 등급, 풀이 기록 조회를 담당합니다. |
-| `classic.sentence` | 고전 문장 Entity와 문장 조회 Repository를 담당합니다. |
-| `common.exception` | 공통 API 예외 응답 구조를 담당합니다. |
+| `auth` | 회원가입, 로그인, 사용자 인증 관련 기능 관리 |
+| `auth.config` | Spring Security 설정 및 인증/인가 정책 관리 |
+| `auth.jwt` | JWT 토큰 생성, 검증, 인증 필터 처리 |
+| `classic.gpt` | GPT 기반 사용자 답안 의미 평가 및 AI 피드백 생성 |
+| `classic.problem` | 문제 세션 생성, 단계별 문제 제공, 답안 제출 및 채점 처리 |
+| `classic.progress` | 사용자 학습 기록, 풀이 이력, 경험치, 문패 등급 관리 |
+| `classic.sentence` | 고전 문장 데이터 엔티티 및 Repository 관리 |
+| `common.exception` | 전역 예외 처리 및 API 에러 응답 관리 |
+| `resources` | 정적 리소스, 템플릿, 애플리케이션 설정 파일 관리 |
 
 ## 11. 실행 방법 ⚙️
 
@@ -673,14 +744,6 @@ Windows 환경에서는 다음 명령을 사용할 수 있습니다.
 ```text
 http://localhost:8080
 ```
-
-### 배포 정보
-
-| 항목 | 내용 |
-|---|---|
-| 백엔드 배포 주소 | 배포 주소 추가 예정 |
-| 프론트엔드 주소 | 추가 예정 |
-| 배포 방식 | 추가 예정 |
 
 ## 12. 트러블슈팅 🧯
 
