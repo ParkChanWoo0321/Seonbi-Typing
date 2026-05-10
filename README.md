@@ -24,7 +24,7 @@
 
 ## 2. 프로젝트 기획 배경 📌
 
-<img width="1294" height="922" alt="Image" src="https://github.com/user-attachments/assets/8ceea43b-fdde-493a-80c5-0a6bf5964ec9" />
+<img width="863" height="615" alt="Image" src="https://github.com/user-attachments/assets/8ceea43b-fdde-493a-80c5-0a6bf5964ec9" />
 
 디지털 환경이 확산되면서 짧고 자극적인 콘텐츠 소비가 증가하고, 줄임말과 신조어 중심의 언어 사용이 일상화되고 있습니다. 이러한 변화 속에서 고전 문장, 사자성어, 고사성어, 전통적인 우리말 표현과 같은 언어 자산은 점차 일상에서 접하기 어려워지고 있습니다.
 
@@ -50,6 +50,8 @@
 - 반복 학습을 통한 지속적인 언어 습득
 - 고전 우리말의 대중화
 - 전통 언어 자산의 문화적 가치 보존
+
+### 성과 및 회고
 
 ---
 
