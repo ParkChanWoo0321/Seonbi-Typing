@@ -24,8 +24,21 @@
 
 ## 2. 프로젝트 기획 배경 📌
 
-<img width="863" height="615" alt="Image" src="https://github.com/user-attachments/assets/8ceea43b-fdde-493a-80c5-0a6bf5964ec9" />
+<table>
+  <tr>
+    <td align="center">
+      <img 
+        src="https://github.com/user-attachments/assets/8ceea43b-fdde-493a-80c5-0a6bf5964ec9" 
+        alt="프로젝트 이미지" 
+        width="100%"
+      />
+    </td>
+  </tr>
+</table>
 
+<br />
+
+여기에 바로 밑에 들어갈 글을 작성하면 됩니다.
 
 디지털 환경이 확산되면서 짧고 자극적인 콘텐츠 소비가 증가하고, 줄임말과 신조어 중심의 언어 사용이 일상화되고 있습니다. 이러한 변화 속에서 고전 문장, 사자성어, 고사성어, 전통적인 우리말 표현과 같은 언어 자산은 점차 일상에서 접하기 어려워지고 있습니다.
 
@@ -66,20 +79,21 @@
   <tr>
     <td width="50%" align="center">
       <img 
-        src="https://github.com/user-attachments/assets/ac5e967d-728c-4d6d-9c6a-1b9edd693ed9" 
+        src="https://github.com/user-attachments/assets/e34a475b-5af2-4a4a-b0f0-50204874551f" 
         alt="프로젝트 이미지 1" 
         width="100%"
       />
     </td>
     <td width="50%" align="center">
       <img 
-        src="https://github.com/user-attachments/assets/e34a475b-5af2-4a4a-b0f0-50204874551f" 
+        src="https://github.com/user-attachments/assets/ac5e967d-728c-4d6d-9c6a-1b9edd693ed9" 
         alt="프로젝트 이미지 2" 
         width="100%"
       />
     </td>
   </tr>
 </table>
+<br />
 
 | 기능 | 설명 |
 |---|---|
