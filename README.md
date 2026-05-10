@@ -1,6 +1,6 @@
 # 선비타이핑 🎓
 
-<img width="395" height="213" alt="Image" src="https://github.com/user-attachments/assets/9ca2d32c-fbf8-47dd-a09d-defdc5bd5c00" />
+<img width="112" height="68" alt="Image" src="https://github.com/user-attachments/assets/9ca2d32c-fbf8-47dd-a09d-defdc5bd5c00" />
 
 ## 1. 프로젝트 소개 🚀
 
