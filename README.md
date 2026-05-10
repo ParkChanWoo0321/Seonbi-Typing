@@ -1,13 +1,7 @@
 # 선비타이핑 🎓
 
-<p align="center">
-  <img 
-    width="168" 
-    height="93" 
-    alt="Image" 
-    src="https://github.com/user-attachments/assets/3980abea-8fe3-4160-b015-2593e15ba567" 
-  />
-</p>
+<img width="395" height="213" alt="Image" src="https://github.com/user-attachments/assets/9ca2d32c-fbf8-47dd-a09d-defdc5bd5c00" />
+
 ## 1. 프로젝트 소개 🚀
 
 선비타이핑은 고전 문장을 학습하고 단계별 문제 풀이를 통해 문장의 의미를 익히는 백엔드 서비스입니다. 사용자는 회원가입과 로그인을 통해 JWT 기반 인증을 거친 뒤, 고전 문장을 단어 순서 맞추기, 보고 타이핑, 안 보고 타이핑의 3단계로 학습합니다.
