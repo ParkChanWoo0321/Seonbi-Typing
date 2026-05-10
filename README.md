@@ -60,9 +60,26 @@
 
 ## 4. 주요 기능 ✨
 
-사진 넣을 곳
-
 ### 4.1 사용자 인증 기능
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img 
+        src="https://github.com/user-attachments/assets/ac5e967d-728c-4d6d-9c6a-1b9edd693ed9" 
+        alt="프로젝트 이미지 1" 
+        width="100%"
+      />
+    </td>
+    <td width="50%" align="center">
+      <img 
+        src="https://github.com/user-attachments/assets/e34a475b-5af2-4a4a-b0f0-50204874551f" 
+        alt="프로젝트 이미지 2" 
+        width="100%"
+      />
+    </td>
+  </tr>
+</table>
 
 | 기능 | 설명 |
 |---|---|
@@ -72,8 +89,6 @@
 | 내 정보 조회 | 사용자 이름, 로그인 ID, 풀이 수, 연속 풀이 일수, 등급, 오늘의 문장을 조회합니다. |
 
 사용자별 학습 기록과 진행도를 관리해야 하므로 JWT 기반 인증 구조를 적용하였습니다. 인증된 사용자는 문제 풀이, 풀이 기록 조회, 진행도 확인 기능을 사용할 수 있습니다.
-
-사진 넣을 곳
 
 ---
 
