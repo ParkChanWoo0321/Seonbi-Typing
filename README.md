@@ -26,6 +26,7 @@
 
 <img width="863" height="615" alt="Image" src="https://github.com/user-attachments/assets/8ceea43b-fdde-493a-80c5-0a6bf5964ec9" />
 
+
 디지털 환경이 확산되면서 짧고 자극적인 콘텐츠 소비가 증가하고, 줄임말과 신조어 중심의 언어 사용이 일상화되고 있습니다. 이러한 변화 속에서 고전 문장, 사자성어, 고사성어, 전통적인 우리말 표현과 같은 언어 자산은 점차 일상에서 접하기 어려워지고 있습니다.
 
 현재 영어 학습 서비스나 게임형 언어 학습 플랫폼은 다양하게 존재하지만, 우리 고유의 고전 언어 표현을 쉽고 재미있게 학습할 수 있는 디지털 서비스는 상대적으로 부족합니다. 또한 고전 문장은 한자 원문, 독음, 현대어 해석을 함께 이해해야 학습 효과가 높지만, 기존의 단순 암기 방식만으로는 문장 구조와 의미를 오래 기억하기 어렵습니다.
@@ -51,15 +52,17 @@
 - 고전 우리말의 대중화
 - 전통 언어 자산의 문화적 가치 보존
 
-### 성과 및 회고
-
----
-
-## 3. 주요 기능 ✨
+## 3. 성과 및 회고 🏆
 
 사진 넣을 곳
 
-### 3.1 사용자 인증 기능
+---
+
+## 4. 주요 기능 ✨
+
+사진 넣을 곳
+
+### 4.1 사용자 인증 기능
 
 | 기능 | 설명 |
 |---|---|
@@ -74,7 +77,7 @@
 
 ---
 
-### 3.2 단계형 고전 문장 학습 기능
+### 4.2 단계형 고전 문장 학습 기능
 
 선비타이핑은 고전 문장을 한 번에 암기하는 방식이 아니라, 단계적으로 이해하고 입력하는 방식으로 학습 흐름을 구성하였습니다.
 
@@ -90,7 +93,7 @@
 
 ---
 
-### 3.3 문제 시작 및 세션 관리 기능
+### 4.3 문제 시작 및 세션 관리 기능
 
 문제 시작 기능은 사용자의 학습 상태에 따라 새 문제 출제, 진행 중 문제 재개, 완료 문제 복습을 구분하여 처리합니다.
 
@@ -107,7 +110,7 @@
 
 ---
 
-### 3.4 AI 훈장님 피드백 기능
+### 4.4 AI 훈장님 피드백 기능
 
 마지막 단계인 안 보고 타이핑에서는 사용자의 답변과 정답 문장을 GPT API로 비교하여 의미 일치 여부를 평가합니다.
 
@@ -126,7 +129,7 @@
 
 ---
 
-### 3.5 고전 표현 해설 기능
+### 4.5 고전 표현 해설 기능
 
 문제 풀이 후에는 고전 문장의 원문, 독음, 현대어 의미, 해설을 함께 제공합니다.
 
@@ -143,7 +146,7 @@
 
 ---
 
-### 3.6 학습 기록 저장 기능
+### 4.6 학습 기록 저장 기능
 
 사용자가 완료한 문제는 풀이 기록으로 저장됩니다.
 
@@ -160,7 +163,7 @@
 
 ---
 
-### 3.7 레벨 기반 성장 시스템
+### 4.7 레벨 기반 성장 시스템
 
 사용자의 지속적인 학습 참여를 유도하기 위해 전통 관직 명칭을 활용한 문패 등급 시스템을 적용하였습니다.
 
@@ -183,7 +186,7 @@
 
 ---
 
-### 3.8 학습 진행도 관리 기능
+### 4.8 학습 진행도 관리 기능
 
 선비타이핑은 사용자의 학습 활동을 기반으로 진행도를 계산합니다.
 
@@ -198,7 +201,7 @@
 
 사진 넣을 곳
 
-## 4. 기술 스택 🛠️
+## 5. 기술 스택 🛠️
 
 | 구분 | 기술 |
 |---|---|
@@ -214,7 +217,7 @@
 | External API | OpenAI Responses API |
 | Test | JUnit Platform, Spring Boot Test Dependencies |
 
-## 5. 시스템 구조 🧩
+## 6. 시스템 구조 🧩
 
 사진 넣을 곳
 
@@ -248,7 +251,7 @@ Controller 진입
 
 `SecurityConfig`에서는 CSRF, Form Login, HTTP Basic, 기본 Logout을 비활성화하고, 세션 정책을 `STATELESS`로 설정했습니다. `/api/auth/signup`, `/api/auth/login`, `/api/auth/logout`, `/error`, `OPTIONS /**` 요청은 허용하고, 그 외 API는 인증을 요구합니다.
 
-## 6. 백엔드 핵심 구현 내용 🔥
+## 7. 백엔드 핵심 구현 내용 🔥
 
 ### JWT 기반 인증/인가 구조
 
@@ -310,7 +313,7 @@ CORS 허용 Origin은 `app.cors.allowed-origins` 설정값으로 관리합니다
 
 프론트엔드 연동을 고려하여 `Authorization` 헤더를 노출하고, 쿠키 기반 Refresh Token 처리를 위해 credentials를 허용했습니다. 인증이 필요한 API는 JWT 필터를 거쳐야 하며, 회원가입과 로그인 API만 인증 없이 호출할 수 있습니다.
 
-## 7. API 명세 📡
+## 8. API 명세 📡
 
 | 기능 | Method | URL | 인증 필요 여부 | 설명 |
 |---|---|---|---|---|
@@ -324,7 +327,7 @@ CORS 허용 Origin은 `app.cors.allowed-origins` 설정값으로 관리합니다
 | 안 보고 타이핑 제출 | POST | `/api/problems/blind-typing/{problemId}` | 필요 | 안 보고 타이핑 답안을 제출하고 GPT 의미 채점을 수행합니다. |
 | 풀이 기록 조회 | GET | `/api/me/problem-history` | 필요 | 사용자가 완료한 문제 기록을 조회합니다. |
 
-## 8. API 요청/응답 예시 🧾
+## 9. API 요청/응답 예시 🧾
 
 ### 회원가입
 
@@ -546,7 +549,7 @@ Response
 }
 ```
 
-## 9. 데이터베이스 설계 🗄️
+## 10. 데이터베이스 설계 🗄️
 
 ### 주요 테이블 요약
 
@@ -660,7 +663,7 @@ Response
 | `members` 1 : 1 `user_progress` | 사용자별 진행도는 하나만 존재합니다. |
 | `members` 1 : N `user_sentence_usages` | 사용자별 문장 사용 여부를 독립적으로 기록합니다. |
 
-## 10. 프로젝트 구조 📁
+## 11. 프로젝트 구조 📁
 
 ```text
 seonbi-mind
@@ -785,106 +788,6 @@ seonbi-mind
 | `classic.sentence` | 고전 문장 데이터 엔티티 및 Repository 관리 |
 | `common.exception` | 전역 예외 처리 및 API 에러 응답 관리 |
 | `resources` | 정적 리소스, 템플릿, 애플리케이션 설정 파일 관리 |
-
-## 11. 실행 방법 ⚙️
-
-### 프로젝트 클론
-
-```bash
-git clone https://github.com/사용자명/레포지토리명.git
-cd 레포지토리명
-```
-
-### DB 생성 및 설정
-
-MySQL에 사용할 데이터베이스를 생성합니다.
-
-```sql
-CREATE DATABASE seonbimind
-  DEFAULT CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-```
-
-### application.properties 설정
-
-현재 프로젝트는 `src/main/resources/application.properties`를 사용합니다. 민감한 값은 환경 변수로 주입하는 구조입니다.
-
-```properties
-spring.application.name=SeonbiMind
-
-server.port=${SERVER_PORT:8080}
-
-spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/seonbimind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
-spring.datasource.username=${DB_USERNAME:seonbi}
-spring.datasource.password=${DB_PASSWORD}
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=${JPA_DDL_AUTO:update}
-spring.jpa.show-sql=${JPA_SHOW_SQL:false}
-spring.jpa.properties.hibernate.format_sql=${JPA_FORMAT_SQL:false}
-
-jwt.secret=${JWT_SECRET}
-jwt.access-token-expiration-ms=${JWT_ACCESS_TOKEN_EXPIRATION_MS:3600000}
-jwt.refresh-token-expiration-ms=${JWT_REFRESH_TOKEN_EXPIRATION_MS:1209600000}
-
-openai.api-key=${OPENAI_API_KEY}
-openai.model=${OPENAI_MODEL:gpt-5.5}
-openai.responses-url=${OPENAI_RESPONSES_URL:https://api.openai.com/v1/responses}
-
-app.cors.allowed-origins=${CORS_ALLOWED_ORIGINS:http://localhost:5173}
-```
-
-### 필요한 환경 변수 예시
-
-```bash
-export DB_URL="jdbc:mysql://localhost:3306/seonbimind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
-export DB_USERNAME="seonbi"
-export DB_PASSWORD="your_db_password"
-export JWT_SECRET="your-jwt-secret-key"
-export OPENAI_API_KEY="your-openai-api-key"
-export CORS_ALLOWED_ORIGINS="http://localhost:5173"
-```
-
-Windows PowerShell 예시입니다.
-
-```powershell
-$env:DB_URL="jdbc:mysql://localhost:3306/seonbimind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
-$env:DB_USERNAME="seonbi"
-$env:DB_PASSWORD="your_db_password"
-$env:JWT_SECRET="your-jwt-secret-key"
-$env:OPENAI_API_KEY="your-openai-api-key"
-$env:CORS_ALLOWED_ORIGINS="http://localhost:5173"
-```
-
-### Gradle 빌드
-
-```bash
-./gradlew build
-```
-
-Windows 환경에서는 다음 명령을 사용할 수 있습니다.
-
-```powershell
-.\gradlew.bat build
-```
-
-### 서버 실행
-
-```bash
-./gradlew bootRun
-```
-
-Windows 환경에서는 다음 명령을 사용할 수 있습니다.
-
-```powershell
-.\gradlew.bat bootRun
-```
-
-기본 서버 포트는 `8080`입니다.
-
-```text
-http://localhost:8080
-```
 
 ## 12. 트러블슈팅 🧯
 
