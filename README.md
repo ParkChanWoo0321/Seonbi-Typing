@@ -1,6 +1,6 @@
 # 선비타이핑 🎓
 
-사진 넣을 곳
+<img width="112" height="62" alt="Image" src="https://github.com/user-attachments/assets/3980abea-8fe3-4160-b015-2593e15ba567" />
 
 ## 1. 프로젝트 소개 🚀
 
