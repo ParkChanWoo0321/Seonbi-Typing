@@ -892,3 +892,4 @@ JPA Entity 설계에서는 진행 중인 문제와 완료된 풀이 기록을 �
 | 관리자 기능 확장 | 현재 관리자 API는 없으므로, 고전 문장 등록·수정·삭제 기능을 별도 권한 기반으로 확장할 수 있습니다. |
 | 보안 설정 강화 | 운영 환경에서는 Refresh Token 쿠키의 `secure` 옵션을 true로 설정하고, CORS 허용 Origin을 배포 도메인으로 제한할 수 있습니다. |
 <!-- yolo badge test -->
+<!-- yolo badge test 2 -->
