@@ -103,6 +103,19 @@
 ---
 
 ### 4.2 단계형 고전 문장 학습 기능
+<table>
+  <tr>
+    <td align="center">
+      <img 
+        src="https://github.com/user-attachments/assets/2163aab1-aa62-4f3d-ac60-fd357b3c3fbe"
+        alt="프로젝트 이미지" 
+        width="100%"
+      />
+    </td>
+  </tr>
+</table>
+
+<br />
 
 선비타이핑은 고전 문장을 한 번에 암기하는 방식이 아니라, 단계적으로 이해하고 입력하는 방식으로 학습 흐름을 구성하였습니다.
 
