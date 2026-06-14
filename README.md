@@ -107,7 +107,7 @@
   <tr>
     <td align="center">
       <img 
-        src="https://github.com/user-attachments/assets/2163aab1-aa62-4f3d-ac60-fd357b3c3fbe"
+        src="https://github.com/user-attachments/assets/07ebb5b2-7414-43ef-989d-98ab8464af14"
         alt="프로젝트 이미지" 
         width="100%"
       />
