@@ -32,13 +32,14 @@
 ## 아키텍처
 
 ```mermaid
+%%{init: {"flowchart": {"rankSpacing": 20, "nodeSpacing": 30, "padding": 10}}}%%
 flowchart TB
     webClient["Web Client"]
 
     subgraph backend ["Spring Boot Backend"]
-        security["Spring Security · JWT"]
+        security["Security · JWT"]
         controller["REST Controller"]
-        service["Service · 인증 / 문제 / 진도"]
+        service["인증 · 문제 · 진도 서비스"]
         repository["JPA Repository"]
         evaluator["의미 채점 서비스"]
 
