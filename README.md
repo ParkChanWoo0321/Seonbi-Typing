@@ -24,14 +24,37 @@
 
 | 영역 | 구현 내용 |
 | --- | --- |
-| 인증 | BCrypt 비밀번호 해싱, JWT 발급·검증, 로그인한 회원 식별 |
+| 인증 | BCrypt 비밀번호 해싱, Access Token 발급·검증, Refresh Token 발급, 로그인한 회원 식별 |
 | 문제 풀이 | 회원별 출제, 진행 중인 문제 재사용, 풀이 단계와 소유권 검증 |
 | 기록·진도 | 완료 당시의 문장·답안 저장, 누적 풀이 수·연속 학습일·등급 계산 |
 | 의미 채점 | OpenAI API 연동, JSON Schema로 채점 결과 형식 지정, 결과와 설명 저장 |
 
 ## 아키텍처
 
-![선비타이핑 백엔드 아키텍처](docs/diagrams/architecture.png)
+```mermaid
+flowchart LR
+    webClient["Web Client"]
+
+    subgraph backend ["Spring Boot Backend"]
+        security["Spring Security · JWT"]
+        controller["REST Controller"]
+        service["Service · 인증 / 문제 / 진도"]
+        repository["JPA Repository"]
+        evaluator["GptMeaningEvaluationService"]
+
+        security --> controller
+        controller --> service
+        service --> repository
+        service --> evaluator
+    end
+
+    mysql[("MySQL")]
+    openai["OpenAI Responses API"]
+
+    webClient -->|"REST · Bearer Token"| security
+    repository -->|"조회 / 저장"| mysql
+    evaluator -->|"RestClient · 의미 채점"| openai
+```
 
 단일 Spring Boot 애플리케이션에서 인증·문제·학습 기록 기능을 나눴습니다. 요청은 Spring Security를 거쳐 Controller와 Service로 전달되며, JPA Repository를 통해 MySQL에 저장됩니다. 마지막 쓰기 단계에서는 OpenAI API로 의미를 채점합니다. 위 그림은 소스 기준의 애플리케이션 구성입니다.
 
@@ -71,13 +94,71 @@
 
 JSON Schema로 정오답 `correct`와 설명 `reason`을 요청하고, 응답을 DTO로 변환해 완료 여부를 결정합니다. 채점 설명은 훈장님 말투로 요청하며, 답안과 함께 저장합니다.
 
-현재 외부 호출은 동기 방식으로 DB 트랜잭션 안에서 수행됩니다. 외부 호출과 DB 변경이 함께 롤백되지는 않으므로, 호출 시간 제한과 트랜잭션 경계 개선을 후속 과제로 두었습니다.
+현재 외부 호출은 동기 방식으로 DB 트랜잭션 안에서 수행됩니다. DB 변경을 롤백해도 이미 수행한 외부 API 호출은 취소되지 않으므로, 호출 시간 제한과 트랜잭션 경계 개선을 후속 과제로 두었습니다.
 
 코드: [GptMeaningEvaluationService](src/main/java/youngju/seonbimind/classic/gpt/service/GptMeaningEvaluationService.java) · [MeaningEvaluationResult](src/main/java/youngju/seonbimind/classic/gpt/dto/MeaningEvaluationResult.java)
 
 ## 데이터 모델
 
-![선비타이핑 ERD](docs/diagrams/erd.png)
+```mermaid
+erDiagram
+    members ||..o{ problem_sessions : "풀이 진행"
+    members ||..o{ user_sentence_usages : "완료 문장"
+    members ||..o| user_progress : "학습 진도"
+    members ||..o{ solved_problem_histories : "완료 기록"
+    classic_sentences ||..o{ problem_sessions : "출제"
+    classic_sentences ||..o{ user_sentence_usages : "사용 이력"
+    classic_sentences ||..o{ solved_problem_histories : "원본 문장"
+
+    members {
+        bigint id PK
+        string login_id UK
+        string name
+        string password "BCrypt 해시"
+    }
+    classic_sentences {
+        bigint id PK
+        text original_text
+        text reading_text
+        text meaning
+        boolean used
+    }
+    problem_sessions {
+        bigint id PK
+        bigint member_id FK "history_id와 복합 UNIQUE"
+        bigint sentence_id FK
+        bigint history_id "NULL 허용"
+        string stage
+        text shuffled_words
+        boolean completed
+        datetime completed_at
+    }
+    user_sentence_usages {
+        bigint id PK
+        bigint member_id FK "sentence_id와 복합 UNIQUE"
+        bigint sentence_id FK
+        datetime used_at
+    }
+    user_progress {
+        bigint id PK
+        bigint member_id FK, UK
+        int total_solved_count
+        int current_streak
+        date last_solved_date
+    }
+    solved_problem_histories {
+        bigint id PK
+        bigint member_id FK "history_id와 복합 UNIQUE"
+        bigint sentence_id FK
+        bigint history_id "NULL 허용"
+        bigint problem_session_id "일반 ID 컬럼 · FK 아님"
+        text original_text
+        text reading_text
+        text meaning
+        text gpt_reason
+        datetime solved_at
+    }
+```
 
 회원·문장·문제 세션·회원별 문장 사용 이력·진도·완료 기록을 6개 테이블로 나눴습니다. ERD는 JPA 매핑의 주요 컬럼과 제약을 표시합니다.
 
@@ -88,7 +169,7 @@ JSON Schema로 정오답 `correct`와 설명 `reason`을 요청하고, 응답을
 
 ## 검증과 개선 과제
 
-공개 코드 [2f1f2a5](https://github.com/ParkChanWoo0321/Seonbi-Typing/commit/2f1f2a56c87b38af150348e1b020a03483337091)에서 소스·테스트 소스 컴파일과 실행 JAR 생성을 확인했습니다. 현재 테스트 코드는 컨텍스트 로딩 테스트 1개이며, 이번 확인에 테스트 실행과 실제 DB·OpenAI 연동 검증은 포함하지 않았습니다.
+공개 코드 [2f1f2a5](https://github.com/ParkChanWoo0321/Seonbi-Typing/commit/2f1f2a56c87b38af150348e1b020a03483337091)에서 소스·테스트 소스 컴파일과 실행 JAR 생성을 확인했습니다. 현재 테스트 코드는 컨텍스트 로딩 테스트 1개입니다. 검증 범위는 컴파일과 JAR 생성이며, 테스트 실행과 실제 DB·OpenAI 연동 검증은 제외했습니다.
 
 | 개선 항목 | 다음 작업 |
 | --- | --- |
@@ -97,4 +178,4 @@ JSON Schema로 정오답 `correct`와 설명 `reason`을 요청하고, 응답을
 | 외부 채점 | 호출 시간 제한, 오류 응답 정리, DB 트랜잭션과 호출 범위 분리 |
 | 조회·테스트 | 기록 페이지네이션, 출제 쿼리 개선, 단계·권한·날짜 경계 테스트 추가 |
 
-상세 API, 실행 환경, 현재 제약은 [백엔드 개발 가이드](docs/backend-guide.md)에 정리했습니다. 다이어그램은 [생성 코드](docs/diagrams/render_diagrams.py)로 다시 만들 수 있습니다.
+상세 API, 실행 환경, 현재 제약은 [백엔드 개발 가이드](docs/backend-guide.md)에 정리했습니다. 아키텍처와 ERD는 이 README의 Mermaid 코드로 관리합니다.
