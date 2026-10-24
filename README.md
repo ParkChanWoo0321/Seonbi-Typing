@@ -32,7 +32,7 @@
 ## 아키텍처
 
 ```mermaid
-flowchart LR
+flowchart TB
     webClient["Web Client"]
 
     subgraph backend ["Spring Boot Backend"]
@@ -40,7 +40,7 @@ flowchart LR
         controller["REST Controller"]
         service["Service · 인증 / 문제 / 진도"]
         repository["JPA Repository"]
-        evaluator["GptMeaningEvaluationService"]
+        evaluator["의미 채점 서비스"]
 
         security --> controller
         controller --> service
@@ -100,21 +100,22 @@ JSON Schema로 정오답 `correct`와 설명 `reason`을 요청하고, 응답을
 
 ## 데이터 모델
 
+6개 테이블을 문제 풀이와 학습 기록으로 나누어 표시했습니다. 두 그림의 `members`와 `classic_sentences`는 같은 테이블입니다.
+
+### 문제 풀이
+
 ```mermaid
 erDiagram
     members ||..o{ problem_sessions : "풀이 진행"
     members ||..o{ user_sentence_usages : "완료 문장"
-    members ||..o| user_progress : "학습 진도"
-    members ||..o{ solved_problem_histories : "완료 기록"
     classic_sentences ||..o{ problem_sessions : "출제"
     classic_sentences ||..o{ user_sentence_usages : "사용 이력"
-    classic_sentences ||..o{ solved_problem_histories : "원본 문장"
 
     members {
         bigint id PK
         string login_id UK
         string name
-        string password "BCrypt 해시"
+        string password
     }
     classic_sentences {
         bigint id PK
@@ -125,9 +126,9 @@ erDiagram
     }
     problem_sessions {
         bigint id PK
-        bigint member_id FK "history_id와 복합 UNIQUE"
+        bigint member_id FK
         bigint sentence_id FK
-        bigint history_id "NULL 허용"
+        bigint history_id
         string stage
         text shuffled_words
         boolean completed
@@ -135,9 +136,25 @@ erDiagram
     }
     user_sentence_usages {
         bigint id PK
-        bigint member_id FK "sentence_id와 복합 UNIQUE"
+        bigint member_id FK
         bigint sentence_id FK
         datetime used_at
+    }
+```
+
+### 학습 기록
+
+```mermaid
+erDiagram
+    members ||..o| user_progress : "학습 진도"
+    members ||..o{ solved_problem_histories : "완료 기록"
+    classic_sentences ||..o{ solved_problem_histories : "원본 문장"
+
+    members {
+        bigint id PK
+    }
+    classic_sentences {
+        bigint id PK
     }
     user_progress {
         bigint id PK
@@ -148,10 +165,10 @@ erDiagram
     }
     solved_problem_histories {
         bigint id PK
-        bigint member_id FK "history_id와 복합 UNIQUE"
+        bigint member_id FK
         bigint sentence_id FK
-        bigint history_id "NULL 허용"
-        bigint problem_session_id "일반 ID 컬럼 · FK 아님"
+        bigint history_id
+        bigint problem_session_id
         text original_text
         text reading_text
         text meaning
@@ -160,8 +177,9 @@ erDiagram
     }
 ```
 
-회원·문장·문제 세션·회원별 문장 사용 이력·진도·완료 기록을 6개 테이블로 나눴습니다. ERD는 JPA 매핑의 주요 컬럼과 제약을 표시합니다.
+ERD는 JPA 매핑의 주요 컬럼과 관계를 표시합니다. 복합 유니크 제약과 NULL 허용 여부는 아래와 같습니다.
 
+- `problem_sessions`와 `solved_problem_histories`: 각각 `(member_id, history_id)` 복합 유니크 제약을 둡니다.
 - `user_sentence_usages`: `(member_id, sentence_id)` 유니크 제약으로 회원별 완료 문장을 관리합니다.
 - `user_progress`: 회원당 최대 1행이며 첫 문제 완료 시 생성합니다.
 - `solved_problem_histories.problem_session_id`: 일반 ID 컬럼으로, 세션 테이블과의 FK 관계는 선언되어 있지 않습니다.
