@@ -39,7 +39,7 @@ flowchart TB
     subgraph backend ["Spring Boot Backend"]
         security["Security · JWT"]
         controller["REST Controller"]
-        service["인증 · 문제 · 진도 서비스"]
+        service["Domain Service"]
         repository["JPA Repository"]
         evaluator["의미 채점 서비스"]
 
