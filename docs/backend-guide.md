@@ -20,6 +20,43 @@
 
 문제 시작 요청은 `{"historyId": 1}`, 각 단계의 답안 요청은 `{"answer": "사용자가 입력한 문장"}` 형태입니다. 시작 응답의 `problemId`를 이후 답안 제출에 사용합니다. 관리자용 문장 CRUD API는 현재 제공하지 않습니다.
 
+### 인증 요청 예시
+
+회원가입 · `POST /api/auth/signup`
+
+```json
+{
+  "name": "학습자",
+  "loginId": "seonbi-demo",
+  "password": "example-password"
+}
+```
+
+로그인 · `POST /api/auth/login`
+
+```json
+{
+  "loginId": "seonbi-demo",
+  "password": "example-password"
+}
+```
+
+위 값은 요청 형식 설명용이며, 미리 생성된 계정이 아닙니다. 두 요청은 `Content-Type: application/json`으로 전송합니다. `loginId` 대신 `id`도 받을 수 있지만, 둘 다 전달되면 비어 있지 않은 `loginId`를 우선 사용합니다.
+
+로그인·회원가입 응답의 `accessToken`은 이후 보호된 API의 요청 헤더에 넣습니다.
+
+```http
+Authorization: Bearer <accessToken>
+```
+
+### 응답과 기록 범위
+
+- 진행 중인 세션은 재사용하지만, 문제 시작 응답에는 현재 단계와 이전 답안 필드가 없습니다.
+- 각 단계의 답안은 제출할 때마다 덮어쓰며, 완료 기록에는 단계별 최종 답안을 저장합니다. 모든 오답 시도의 이력을 별도로 보존하지는 않습니다.
+- `ResponseStatusException`은 `timestamp`, `status`, `error`, `message`, `path` 형식으로 응답합니다. Spring Security가 인증되지 않은 요청을 차단할 때는 401과 `{"message":"인증이 필요합니다."}`를 반환하므로, 모든 오류 응답의 구조가 동일하지는 않습니다.
+
+관련 코드: [SignupRequest](../src/main/java/youngju/seonbimind/auth/dto/SignupRequest.java) · [LoginRequest](../src/main/java/youngju/seonbimind/auth/dto/LoginRequest.java) · [ApiExceptionHandler](../src/main/java/youngju/seonbimind/common/exception/ApiExceptionHandler.java)
+
 ## 실행 방법
 
 Java 17과 MySQL을 준비한 뒤 DB 스키마와 접속 계정을 생성합니다. 서버는 기본적으로 8080 포트에서 실행됩니다. 별도 Docker 구성은 필요하지 않습니다.
